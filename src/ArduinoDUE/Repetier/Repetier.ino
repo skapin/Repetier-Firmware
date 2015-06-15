@@ -140,7 +140,9 @@ Custom M Codes
 */
 
 #include "Repetier.h"
+#include <Wire.h>
 #include <SPI.h>
+#include "eps.h"
 
 #if UI_DISPLAY_TYPE == DISPLAY_ARDUINO_LIB
 //#include <LiquidCrystal.h> // Uncomment this if you are using liquid crystal library

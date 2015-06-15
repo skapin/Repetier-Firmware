@@ -413,6 +413,9 @@ usage or for seraching for memory induced errors. Switch it off for production, 
 #include "SdFat.h"
 #endif
 
+
+#include "eps.h"
+
 #if ENABLE_BACKLASH_COMPENSATION && DRIVE_SYSTEM != CARTESIAN
 #undef ENABLE_BACKLASH_COMPENSATION
 #define ENABLE_BACKLASH_COMPENSATION false

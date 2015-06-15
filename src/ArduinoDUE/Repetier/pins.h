@@ -574,7 +574,7 @@ STEPPER_CURRENT_CONTROL
 
 #define FAN_BOARD_PIN           FAN_BOARD_0
 // FAN_BOARD_0 ///< repetier fan handler
-#define FAN_BOARD_0             44//150
+#define FAN_BOARD_0             150
 #define FAN_BOARD_1             (9 +PINS_PER_BOARD*2)
 
 #define FAN_CHAMBER_PEL_0       (9 +PINS_PER_BOARD*3)
@@ -671,21 +671,21 @@ STEPPER_CURRENT_CONTROL
 #define ORIG_X_STEP_PIN         13
 #define ORIG_X_DIR_PIN          33
 #define ORIG_X_ENABLE_PIN       31
-#define ORIG_X_MIN_PIN          23//99
+#define ORIG_X_MIN_PIN          99
 #define ORIG_X_MAX_PIN          101
 #define X_HOME_PIN              103
 
 #define ORIG_Y_STEP_PIN         12
 #define ORIG_Y_DIR_PIN          32
 #define ORIG_Y_ENABLE_PIN       30
-#define ORIG_Y_MIN_PIN          24//105
+#define ORIG_Y_MIN_PIN          105
 #define ORIG_Y_MAX_PIN          107
 #define Y_HOME_PIN              109
 
 #define ORIG_Z_STEP_PIN         8
 #define ORIG_Z_DIR_PIN          25
 #define ORIG_Z_ENABLE_PIN       23
-#define ORIG_Z_MIN_PIN          25//111
+#define ORIG_Z_MIN_PIN          111
 #define ORIG_Z_MAX_PIN          113
 #define Z_HOME_PIN              117
 
