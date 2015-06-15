@@ -416,6 +416,7 @@ usage or for seraching for memory induced errors. Switch it off for production, 
 
 #include "eps.h"
 #include "lvm.h"
+#include "Polybox.h"
 
 #if ENABLE_BACKLASH_COMPENSATION && DRIVE_SYSTEM != CARTESIAN
 #undef ENABLE_BACKLASH_COMPENSATION
