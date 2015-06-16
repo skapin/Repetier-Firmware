@@ -49,4 +49,6 @@ Each of the following events describe the parameter and when it is called.
 #define EVENT_START_UI_ACTION(shortAction) {}
 // Gets called if a nextPrevius actions gets executed.
 #define EVENT_START_NEXTPREVIOUS(action,increment) {}
+// Gets called when parsing GCode
+#define EVENT_GCODE_PARSING {}
 #endif // EVENTS_H_INCLUDED

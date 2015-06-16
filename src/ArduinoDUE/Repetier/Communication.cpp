@@ -31,6 +31,31 @@ FSTRINGVALUE(Com::tFirmware,"FIRMWARE_NAME:Repetier_" REPETIER_VERSION " FIRMWAR
 #endif
 #endif
 FSTRINGVALUE(Com::tDebug,"Debug:")
+/** POLY **/
+FSTRINGVALUE(Com::tSpaceTColon," T:")
+FSTRINGVALUE(Com::tSpaceT0Colon," T0:")
+FSTRINGVALUE(Com::tSpaceT1Colon," T1:")
+FSTRINGVALUE(Com::tSpaceT2Colon," T2:")
+FSTRINGVALUE(Com::tSpaceT3Colon," T3:")
+FSTRINGVALUE(Com::tSpaceB," B")
+FSTRINGVALUE(Com::tSpaceAColon," A:")
+FSTRINGVALUE(Com::tSpaceCColon," C:")
+FSTRINGVALUE(Com::tSpaceRColon," R:")
+FSTRINGVALUE(Com::tSpacePColon," P:")
+FSTRINGVALUE(Com::tSpaceIColon," I:")
+FSTRINGVALUE(Com::tSpaceZ0Colon," Z0:")
+FSTRINGVALUE(Com::tSpaceZ1Colon," Z1:")
+FSTRINGVALUE(Com::tSpaceZ2Colon," Z2:")
+FSTRINGVALUE(Com::tSpaceZ3Colon," Z3:")
+FSTRINGVALUE(Com::tSpaceZ4Colon," Z4:")
+FSTRINGVALUE(Com::tSpaceP," P")
+FSTRINGVALUE(Com::tSpaceH," H")
+FSTRINGVALUE(Com::tSpaceM," M")
+FSTRINGVALUE(Com::tSpaceB0Colon," B0:")
+FSTRINGVALUE(Com::tSpaceB1Colon," B1:")
+FSTRINGVALUE(Com::tSpaceB2Colon," B2:")
+FSTRINGVALUE(Com::tSpaceB3Colon," B3:")
+/** END **/
 FSTRINGVALUE(Com::tOk,"ok")
 FSTRINGVALUE(Com::tNewline,"\r\n")
 FSTRINGVALUE(Com::tNAN,"NAN")
@@ -428,6 +453,15 @@ void Com::config(FSTRINGPARAM(text),float value,uint8_t digits){
     printF(tConfig);
     printFLN(text,value,digits);
 }
+void Com::printPolybox()
+{
+    print(POLY_SERIAL_SEPARATOR_VALUE);
+}
+void Com::printPolybox(int n)
+{
+    print(POLY_SERIAL_SEPARATOR_VALUE);
+    print(n);
+}
 void Com::printWarningF(FSTRINGPARAM(text)) {
     printF(tWarning);
     printF(text);
@@ -551,11 +585,11 @@ void Com::printArrayFLN(FSTRINGPARAM(text),int32_t *arr,uint8_t n) {
 void Com::printFloat(float number, uint8_t digits)
 {
   if (isnan(number)) {
-	printF(tNAN);
+    printF(tNAN);
     return;
   }
   if (isinf(number)) {
-	printF(tINF);
+    printF(tINF);
     return;
   }
   // Handle negative numbers

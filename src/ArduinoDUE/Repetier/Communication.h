@@ -25,6 +25,31 @@
 class Com
 {
     public:
+    /** POLY **/
+FSTRINGVAR(tSpaceAColon)
+FSTRINGVAR(tSpaceCColon)
+FSTRINGVAR(tSpaceRColon)
+FSTRINGVAR(tSpacePColon)
+FSTRINGVAR(tSpaceIColon)
+FSTRINGVAR(tSpaceZ0Colon)
+FSTRINGVAR(tSpaceZ1Colon)
+FSTRINGVAR(tSpaceZ2Colon)
+FSTRINGVAR(tSpaceZ3Colon)
+FSTRINGVAR(tSpaceZ4Colon)
+FSTRINGVAR(tSpaceP)
+FSTRINGVAR(tSpaceH)
+FSTRINGVAR(tSpaceM)
+FSTRINGVAR(tSpaceB)
+FSTRINGVAR(tSpaceTColon)
+FSTRINGVAR(tSpaceT0Colon)
+FSTRINGVAR(tSpaceT1Colon)
+FSTRINGVAR(tSpaceT2Colon)
+FSTRINGVAR(tSpaceT3Colon)
+FSTRINGVAR(tSpaceB0Colon)
+FSTRINGVAR(tSpaceB1Colon)
+FSTRINGVAR(tSpaceB2Colon)
+FSTRINGVAR(tSpaceB3Colon)
+/** END **/
 FSTRINGVAR(tDebug)
 FSTRINGVAR(tFirmware)
 FSTRINGVAR(tOk)
@@ -393,6 +418,8 @@ static void config(FSTRINGPARAM(text),const char *msg);
 static void config(FSTRINGPARAM(text),int32_t value);
 static void config(FSTRINGPARAM(text),uint32_t value);
 static void config(FSTRINGPARAM(text),float value,uint8_t digits=2);
+static void printPolybox();
+static void printPolybox(int n);
 static void printNumber(uint32_t n);
 static void printWarningF(FSTRINGPARAM(text));
 static void printInfoF(FSTRINGPARAM(text));

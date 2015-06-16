@@ -1923,7 +1923,7 @@ void Commands::processMCode(GCode *com)
         Printer::kill(false);
         HAL::delayMilliseconds(200); // write output, make sure heaters are off for safety
 #if !defined(__AVR_ATmega1280__) && !defined(__AVR_ATmega2560__)
-        InterruptProtectedBlock noInts;			// don't disable interrupts on mega2560 and mega1280 because of bootloader bug
+        InterruptProtectedBlock noInts;         // don't disable interrupts on mega2560 and mega1280 because of bootloader bug
 #endif
         while(1) {} // Endless loop
     }
@@ -1961,6 +1961,686 @@ void Commands::processMCode(GCode *com)
 #endif
     }
     break;
+    /* ##################POLYBOX##################### */
+/* ___________________CNC_______________________ */
+#if POLYBOX3D_ENABLE // defined in pins.h
+    case 10: // vacuum on
+    {    }    break;
+    case 11: // vacuum off
+        {    }    break;
+    case 600:   {  Com::printPolybox( com->M );( checkFreeMemory() ); Com::printFLN(Com::tSpace,lowestRAMValue); }    break;
+    case 611: // Get CNCTool plugged
+    {
+        Com::printPolybox( com->M );
+        if ( READ_VPIN(CN_MOD_MANUAL) )
+        {
+            Com::printFLN(Com::tSpace,  "H");
+        }
+        else if( READ_VPIN(CN_MOD_PROX) )
+        {
+            Com::printFLN(Com::tSpace, "P" );
+        }
+        else
+        {
+            Com::printFLN(Com::tSpace, "0" );
+        }
+    }
+    break;
+    case 612: // Get Lubricant motor plugged
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CN_PRES_LUB) );
+    }
+    break;
+    case 613: // Get Lubrivant level ok
+    {
+        // @TO_TEST Com::printPolybox( com->M );
+        // @TO_TEST Com::printFLN(Com::tSpace, get_lub_level());
+    }
+    break;
+    case 614: // Get Vacuum detected
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CN_PRES_VACUUM) );
+    }
+    break;
+    case 615: // Get recycle fluide state
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CN_STATE_RECYCLE) );
+    }
+    break;
+    case 616: // Get Vacuum state
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CN_STATE_VACUUM) );
+    }
+    break;
+    case 617: // Get lub state
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CN_STATE_LUB) );
+    }
+    break;
+/* ___________________SCANNER_______________________ */
+    case 620:    //get scanner status
+    {
+  //      Com::printPolybox( com->M );
+  //      Com::printFLN(Com::tSpace,1); // send 1 for ready/ok
+    }
+    break;
+    case 621: // Get turntable plugged
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(TABLE0_DETECTED_PIN) );
+    }
+    break;
+    case 622:    // Get laser plugged
+    {
+        // @TO_TEST Com::printPolybox( com->M );
+        // @TO_TEST Com::printF(Com::tSpaceP, 0);
+        // @TO_TEST Com::printF(Com::tColon, laser_detected(0) );
+        // @TO_TEST Com::printF(Com::tSpaceP, 1);
+        // @TO_TEST Com::printFLN(Com::tColon, laser_detected(1) );
+    }
+    break;
+    case 624:    // Set  turntable On/Off
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( TABLE0_ENABLE_PIN, !(com->S) );
+        }
+    }
+    break;
+    case 625:    // TurnTable X stepper
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST pin_x_steps( TABLE0_STEP_PIN, com->S );
+        }
+    }
+    break;
+    case 627:    // Set Table Clock Direction (0 for CCW)
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( TABLE0_DIR_PIN, (com->S) );
+        }
+    }
+    case 629:    // Set laser On/Off
+    {
+        /* @TO_TEST
+        if ( com->hasP() && com->hasS() && laser_detected(com->P) )
+        {
+            if ( com->P == 0 )
+            {
+                WRITE_VPIN( LASER_0_PIN, (com->S) );
+            }
+            else if ( com->P == 1 )
+            {
+                WRITE_VPIN( LASER_1_PIN, (com->S) );
+            }
+        }*/
+    }
+    break;
+    case 631:    // Set LaserRotation On/Off
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( L0_ENABLE_PIN, (com->S) );
+        }
+    }
+    break;
+    case 632:    // Laser Turn X stepper
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST pin_x_steps( L0_STEP_PIN, com->S );
+        }
+    }
+    break;
+    case 634:    // Set Laser Clock Direction (0 for CCW)
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( L0_DIR_PIN, (com->S) );
+        }
+    }
+    break;
+/* ___________________LABVIEW_______________________ */
+    case 640: // get labview on off
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN( INTER_LVM ));
+    }
+    break;
+    case 641: // set labview on/off
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( SELECT_LVM, com->S );
+        }
+    }
+    break;
+    case 642: // get global color
+    {
+        Com::printPolybox( com->M );
+        Color c = lvm_get_global_color();
+        OUT_P_I(" R:", c.r );
+        OUT_P_I(" E:", c.g );
+        OUT_P_I(" P:", c.b );
+        OUT_P_I_LN(" I:", c.i );
+    }
+    break;
+    case 643: // set global color
+    {
+        if ( com->hasR() && com->hasE() && com->hasP() && com->hasI() && com->hasS() )
+        {
+            Color c = {com->R, com->E, com->P, com->I };
+            lvm_set_face_color( com->S, c ); // id , color
+        }
+        else
+        {
+            Com::printPolybox( com->M );
+            Com::printFLN(Com::tSpace, "Bad arguments...");
+        }
+    }
+    break;
+    case 644: // get global intensity
+    {
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceXColon, lvm_get_global_h_intensity() );
+        Com::printFLN(Com::tSpaceYColon, lvm_get_global_v_intensity() );
+    }
+    break;
+    case 645: // set global intensity
+    {
+        if ( com->hasS() )
+        {
+            lvm_set_global_intensity( com->S, com->S ); // ( h, v )
+        }
+    }
+    break;
+    case 646: // get face intensity
+    {
+        if ( com->hasP() )
+        {
+            Com::printPolybox( com->M );
+            OUT_P_I(" P:", com->P );
+            Com::printF(Com::tSpaceXColon, lvm_get_face_h_intensity( com->P ) );
+            Com::printFLN(Com::tSpaceYColon, lvm_get_face_v_intensity( com->P ) );
+        }
+    }
+    break; // set face intensity
+    case 647: // set face intensity ( h, v )
+    {
+        if ( com->hasS() && com->hasX() && com->hasY())
+        {
+            lvm_set_face_intensity( com->S, com->X, com->Y );
+        }
+    }
+    break;
+    case 648: // get LED state (plugged or no)
+    {
+        Com::printPolybox( com->M );
+        for ( uint8_t i = 0 ; i < LVM_FACES_NUM ; ++i )
+        {
+            Com::printF(Com::tSpaceP, i);
+            Com::printF(Com::tColon, faces[LVM_FACES_NUM].get_detected() );
+        }
+        OUT_P_LN("");
+    }
+    break;
+    case 649: // set labview controller (remote control or software)
+    {
+        if ( com->hasS() ) // softaware
+        {
+            WRITE_VPIN( SELECT_LVM, 255 );
+            OUT_P_I(" V:", 1 );
+        }
+        else // remote controle & other
+        {
+            WRITE_VPIN( SELECT_LVM, LOW );
+            Com::printPolybox( com->M );
+            OUT_P_I(" V:", 0 );
+        }
+    }
+    break;
+    case 650: // get face color
+    {
+        if ( com->hasP() )
+        {
+            Com::printPolybox( com->M );
+            Color c = lvm_get_face_color( com->P );
+            OUT_P_I(" S:", com->P );
+            OUT_P_I(" R:", c.r );
+            OUT_P_I(" E:", c.g );
+            OUT_P_I(" P:", c.b );
+            OUT_P_I_LN(" I:", c.i );
+        }
+    }
+    break;
+    case 651: // set face color
+    {
+        if ( com->hasR() && com->hasE() && com->hasP() && com->hasI() && com->hasS() )
+        {
+            Color c = {com->R, com->E, com->P, com->I };
+            lvm_set_face_color( com->S, c ); // id , color
+        }
+        else
+        {
+            Com::printPolybox( com->M );
+            Com::printFLN(Com::tSpace, "Bad arguments...");
+        }
+    }
+    break;
+/* ___________________PRINTER_______________________ */
+    case 660: // printer ATU (heaters)
+    {
+        // @TO_TEST Com::printPolybox( com->M );
+        // @TO_TEST Com::printFLN(Com::tSpace, chamber.isHeaterDisabled() );
+    }
+    break;
+    case 661: // set printer ATU
+    {
+        if ( com->hasS() )
+        {
+            if ( com->S )
+            {
+                // @TO_TEST chamber.disableHeaters();
+            }
+            else
+            {
+                // @TO_TEST chamber.enableHeaters();
+            }
+        }
+    }
+    break;
+    case 662: // detection tool extruder plugged
+    {
+        Com::printPolybox( com->M );
+        if ( DETECTION_E0 > -1 )
+            Com::printF(Com::tSpaceZ0Colon, READ_VPIN(DETECTION_E0) );
+        if ( DETECTION_E1 > -1 )
+            Com::printF(Com::tSpaceZ1Colon, READ_VPIN(DETECTION_E1) );
+        OUT_P_LN("");
+    }
+    break;
+    case 663: // Get wire detected.
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, 1);
+    }
+    break;
+    case 664: // detect bed
+    {
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceZ0Colon, READ_VPIN(DETECTION_BED_0) );
+        Com::printF(Com::tSpaceZ1Colon, READ_VPIN(DETECTION_BED_1) );
+        Com::printF(Com::tSpaceZ2Colon, READ_VPIN(DETECTION_BED_2) );
+        Com::printFLN(Com::tSpaceZ3Colon, READ_VPIN(DETECTION_BED_3) );
+    }
+    break;
+    case 665: // detect pelletiers (cooler/heater)
+    {
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceZ0Colon, READ_VPIN(DETECTION_PEL_BOX_0) );
+        Com::printF(Com::tSpaceZ1Colon, READ_VPIN(DETECTION_PEL_BOX_0) );
+        Com::printF(Com::tSpaceZ2Colon, READ_VPIN(DETECTION_PEL_BOX_0) );
+        Com::printFLN(Com::tSpaceZ3Colon, READ_VPIN(DETECTION_PEL_BOX_0) );
+    }
+    break;
+    case 679:
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, 112);
+    }
+    break;
+    case 667: // Set fan by mask
+    {
+        if ( com->hasS() && com->hasP() )
+        {
+            // @TO_TEST chamber.setFanByMask( com->P, com->S );
+        }
+    }
+    break;
+    case 670:   // set bed temp fast
+    {
+        #if HAVE_HEATED_BED
+        if(reportTempsensorError()) break;
+        previousMillisCmd = HAL::timeInMilliseconds();
+        if(Printer::debugDryrun()) break;
+            if (com->hasS() && com->hasP() && com->P >= 0)
+            {
+                for (uint8_t i = 0; i < HEATED_BED_NUM ; ++i )
+                {
+                    if ( com->P & (1<< i) ) // mask.  p=1101  => bed 3 on, bed 2 one, bed 1 off bed 0 on
+                    {
+                        // @TO_TEST Extruder::setHeatedBedTemperatureById( com->S, i, false );
+                    }
+                }
+            }
+        #endif
+    }
+    break;
+    case 671:   // set bed temp
+    {
+        #if HAVE_HEATED_BED
+            if(Printer::debugDryrun()) break;
+    //        UI_STATUS_UPD(UI_TEXT_HEATING_BED);
+            Commands::waitUntilEndOfAllMoves();
+            // temp and bed-id ?
+            if (com->hasS() && com->hasP() && com->P >= 0)
+            {
+                for (uint8_t i = 0; i < HEATED_BED_NUM ; ++i )
+                {
+                    if ( com->P & (1<< i) ) // mask.  p=1101  => bed 3 on, bed 2 one, bed 1 off bed 0 on
+                    {
+                        // @TO_TEST Extruder::setHeatedBedTemperatureById( com->S, i, false );
+                    }
+                }
+            }
+            else
+            {
+                return ;
+            }
+            codenum = HAL::timeInMilliseconds();
+            bool heating = true;
+            while( heating )
+            {
+                if( (HAL::timeInMilliseconds()-codenum) > 1000 )   //Print Temp Reading every 1 second while heating up.
+                {
+                    printTemperatures();
+                    codenum = HAL::timeInMilliseconds();
+                }
+                        // @TO_TEST  Commands::checkForPeriodicalActions();
+                // are temps reached for each bed ?
+                heating = false;
+                for (uint8_t i = 0; i < HEATED_BED_NUM ; ++i )
+                {
+                    if ( com->P & (1<< i) ) // mask.  p=1101  => bed 3 on, bed 2 one, bed 1 off bed 0 on
+                    {
+                        // @TO_TEST if ( ! (heatedBedController[i].currentTemperatureC+0.5<heatedBedController[com->P].targetTemperatureC) )
+                            heating = true ; // keep heating cause this bed didnt reach the target temp
+                    }
+                }
+            }
+        #endif
+            //UI_CLEAR_STATUS;
+    }
+    break;
+    case 672: // set all fan
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST chamber.setAllFanPercent( com->S );
+        }
+    }
+    break;
+    case 673: //get chamber temp  ///
+    {
+        // @TO_TEST Com::printPolybox( com->M );
+        // @TO_TEST Com::printFLN(Com::tSpaceT0Colon,chamber.getCurrentTemp() );
+    }
+    break;
+    case 675: // set chamber temp (fast =no wait)
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST chamber.setTargetTemperature( com->S );
+        }
+    }
+    break;
+    /* @TO_TEST case POLY_MCODE_ISCLOGGED: // wire clogged ? (639)
+    {
+        //executeAction( UI_ACTION_PAUSE,  POLY_MCODE_ISCLOGGED );
+        //1099
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace,is_clogged());
+    }
+    break;*/
+    case 677: //get chamber temp (all)
+    {
+        /* @TO_TEST Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceAColon,chamber.getCurrentTempById(0) );
+        Com::printF(Com::tSpaceBColon,chamber.getCurrentTempById(1) );
+        Com::printFLN(Com::tSpaceCColon,chamber.getCurrentTempById(2) );
+        */
+    }
+    break;
+    case 678: //get bed temp (all)
+    {
+       /* @TO_TEST  Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceB0Colon, Extruder::current->getHeatedBedTemperature(0) );
+        Com::printF(Com::tSpaceB1Colon, Extruder::current->getHeatedBedTemperature(1) );
+        Com::printF(Com::tSpaceB2Colon, Extruder::current->getHeatedBedTemperature(2) );
+        Com::printFLN(Com::tSpaceB3Colon, Extruder::current->getHeatedBedTemperature(3) );
+        */
+    }
+    break;
+    /* _____________________GLOBAL______________________ */
+    case 680: // Get ATU
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN( ATU_MAIN ));
+    }
+    break;
+    case 681: // Set ATU // @todo
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST set_atu( com->S );
+        }
+    }
+    break;
+    case 682: //get box open or not
+    {
+        /* @TO_TEST Com::printPolybox( com->M );
+        //Com::printFLN(Com::tSpace,0);
+        Com::printFLN(Com::tSpace,is_box_open());
+        */
+    }
+    break;
+    case 683: // check connected board
+    {
+        Com::printPolybox( com->M );
+        for ( uint8_t i = 1  ; i <= NUM_BOARD ; ++i )
+        {
+            OUT_P_I(" A", i);
+            Com::printF(Com::tColon, boards[i].connected);
+        }
+        OUT_P_LN("");
+    }
+    break;
+    case 684: // is IC open ?
+    {
+        /* @TO_TEST Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, is_ic_open());
+        */
+    }
+    break;
+    case 685: // PRE-ASI monitor
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, ( READ_VPIN(MON_PRE_ASI_0) || READ_VPIN(MON_PRE_ASI_1) ) );
+    }
+    break;
+    case 686: // temp around board
+    {
+        // @TO_TEST Com::printPolybox( com->M );
+        // @TO_TEST Com::printFLN(Com::tSpaceT0Colon, chamber.getCurrentICTemp() );
+    }
+    break;
+    case 687: // power status
+    {
+        Com::printPolybox( com->M );
+        if ( MON_POWER_0 > -1 )
+            Com::printF(Com::tSpaceZ0Colon, READ_VPIN(MON_POWER_0) );
+        if ( MON_POWER_1 > -1 )
+            Com::printF(Com::tSpaceZ1Colon, READ_VPIN(MON_POWER_1) );
+        OUT_P_LN("");
+    }
+    break;
+    case 689:// get tool bloc ATU
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN( INTER_TOOL) );
+    }
+    break;
+    case 690:// set tool bloc ATU
+    {
+        if ( com->hasS() )
+        {
+            WRITE_VPIN( INTER_TOOL, com->S );
+        }
+    }
+    break;
+    case 692: // auto level Z-0 plate/bad. Return 1 when it's done, 0 or soemthing else if error/timeout etc...
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, 1);
+    }
+    break;
+    case 693: // MCODE_GLOBAL_GET_GYRO_ABSOLU
+    {
+        /* @TO_TEST Point p = table.captor.getCurrentAngle();
+
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceZ0Colon, p.x );
+        Com::printF(Com::tSpaceZ1Colon, p.y );
+        Com::printFLN(Com::tSpaceZ2Colon, p.z );
+        */
+    }
+    break;
+    case 694: // MCODE_GLOBAL_GET_GYRO_RELATIF
+    {
+        /* @TO_TEST Point p = table.getCurrentAngle();
+
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceZ0Colon, 0 );
+        Com::printF(Com::tSpaceZ1Colon, 0 );
+        Com::printFLN(Com::tSpaceZ2Colon, 0 );
+        */
+    }
+    break;
+    case 695: // MCODE_GLOBAL_SET_GYRO_OFFSET
+    {
+
+        if ( com->hasX() && com->hasY() && com->hasZ() )
+        {
+            // @TO_TEST table.setOffset( {com->X, com->Y, com->Z } );
+            Com::printPolybox( com->M );
+            Com::printFLN(Com::tSpace, 1);
+        }
+
+    }
+    break;
+    case 696: // MCODE_GLOBAL_MOVE_MOTOR_ANGLE
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, 1);
+    }
+    break;
+    /* _____________________DEBUG______________________ */
+    case 698 : //get_update_queues_size
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpacePColon, get_update_queues_size() );
+    }
+    break;
+    case 699: // i2c refresh timer
+    {
+        if ( com->hasS() )
+        {
+            // @TO_TEST i2c_update_time = com->S;
+            //OUT_P_LN(" I2C Timer updated.");
+        }
+    }
+    break;
+    case 700: // get pin value
+    {
+        if ( com->hasP() )
+        {
+            Com::printPolybox( com->M );
+            Com::printFLN(Com::tSpacePColon, READ_VPIN(com->P) );
+        }
+    }
+    break;
+    case 701: // set pin value
+    {
+        if ( com->hasS() && com->hasP() )
+        {
+            VPIN_MODE(com->P, OUTPUT);
+            WRITE_VPIN(com->P, com->S);
+        }
+    }
+    break;
+    case 702:
+    {
+        if ( com->hasP() )
+        {
+            eps_send_board_update(com->P );
+        }
+    }
+    break;
+    case 703:
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN( Com::tNewline );
+    }
+    break;
+    case 705:
+    {
+        lvm_set_unconnected_light();
+        eps_send_board_update( 4 );
+    }
+    break;
+    case 706:
+    {
+        lvm_set_connected_light();
+        //eps_send_board_update( 4 );
+    }
+    break;
+    case 710:
+    {
+        if ( com->hasF() )
+        {
+            Com::printPolybox( com->M );
+            com->G = com->F;
+            Commands::executeGCode( com );
+            Com::printFLN( Com::tNewline );
+        }
+//          Com::printFLN( Com::tNewline );
+
+    }
+    case 721: // polybox
+        {
+            if(com->hasS() && com->hasP())
+            {
+                uint16_t p = com->P;
+                uint16_t s = com->S;
+
+                uint32_t time;
+                uint32_t start;
+                //BEGIN_INTERRUPT_PROTECTED
+                start = micros();
+                uint8_t real_pin = vpin2bpin(p);
+                uint8_t board_n = vpin2board(p);
+                time = micros() - start;
+
+                Update u = {real_pin, EPS_SET};
+                boards[board_n].pin_update_queue.push( u );
+                boards[board_n].write_bpin( real_pin, s );
+
+                //END_INTERRUPT_PROTECTED
+                Com::printF(Com::tError,time);
+
+
+            }
+        }
+    break;
+#endif //POLYBOX_ENABLE
+//##################POLYBOX--END#####################
 
 #if FEATURE_AUTOLEVEL
     case 320: // M320 Activate autolevel
