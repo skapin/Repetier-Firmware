@@ -1022,6 +1022,7 @@ void Printer::setup()
     HAL::servoMicroseconds(3,SERVO3_NEUTRAL_POS, 1000);
   #endif
 #endif
+EVENT_START_UP
 }
 
 void Printer::defaultLoopActions()

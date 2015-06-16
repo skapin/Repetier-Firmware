@@ -17,10 +17,10 @@ volatile int timer_i2c_send_get=0;
 volatile uint8_t i2c_update_time = BOARD_UPDATE_CHECK_DELAY;
 
 volatile uint8_t polybox_mode = MODE_PRINTER_ON;
-/*
-ChamberTempController chamber;
+
+//ChamberTempController chamber;
 Table table;
-*/
+
 
 
 void manage_mode()

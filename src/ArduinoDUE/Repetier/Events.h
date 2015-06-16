@@ -51,4 +51,6 @@ Each of the following events describe the parameter and when it is called.
 #define EVENT_START_NEXTPREVIOUS(action,increment) {}
 // Gets called when parsing GCode
 #define EVENT_GCODE_PARSING {}
+// Gets called on init
+#define EVENT_START_UP {}
 #endif // EVENTS_H_INCLUDED
