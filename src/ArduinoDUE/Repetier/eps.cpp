@@ -4,21 +4,11 @@
 
 
 
-#if defined(ARDUINO) && ARDUINO >= 100
-#define I2C_WRITE write
-#define I2C_READ read
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#define I2C_WRITE send
-#define I2C_READ receive
-#endif
-
 Board boards[NUM_BOARD];
 bool send_entries_flag = false;
 int next_send_pin=0;
 
-uint8_t i2c_current_board = 0;
+uint8_t i2c_current_board = 1;
 
 ///< ACK system
 bool send_ack = false;
@@ -29,7 +19,6 @@ uint32_t i2c_ack_resend_count = 0;
 uint32_t i2c_timer = 0;
 uint32_t i2c_timer_delay = 0;
 uint8_t i2c_ack_reply_destination = 1;
-
 
 void(* reset_board) (void) = 0;
 
@@ -44,18 +33,21 @@ void eps_manage()
     #if EMULATE_SLAVE >= 1
         return;
     #endif
-    uint8_t pong_flag = !(i2c_timer % PING_PONG_DELAY);
-    uint8_t update_flag = !(i2c_timer % SEND_UPDATE_DELAY);
-    uint8_t get_flag = !(i2c_timer % GET_DELAY);
-    uint8_t token_flag = !(i2c_timer % TOKEN_DELAY);
+
     i2c_timer_delay++;
     if ( i2c_timer_delay % EPS_BASETIME )
     {
         return;
     }
-    if ( i2c_current_board > NUM_BOARD )
+
+    uint8_t pong_flag = !(i2c_timer % PING_PONG_DELAY);
+    uint8_t update_flag = !(i2c_timer % SEND_UPDATE_DELAY);
+    uint8_t get_flag = !(i2c_timer % GET_DELAY);
+    uint8_t token_flag = !(i2c_timer % TOKEN_DELAY);
+
+    if ( i2c_current_board >= NUM_BOARD )
     {
-        i2c_current_board = 0;
+        i2c_current_board = 1;
         i2c_timer++;
     }
 
@@ -107,18 +99,23 @@ void eps_process_incoming_datas(uint8_t board)
     byte action = 0;
     while ( Wire.available() )
     {
-        action = Wire.I2C_READ();
+        action = Wire.I2C_READ_FUNC();
         if ( action == EPS_SET ) {
-            pin = Wire.I2C_READ();
-            value = Wire.I2C_READ() << 8;
-            value += Wire.I2C_READ();
+            pin = Wire.I2C_READ_FUNC();
+            value = Wire.I2C_READ_FUNC() << 8;
+            value += Wire.I2C_READ_FUNC();
             boards[board].write_bpin( pin, value );
         }
         else if ( action == EPS_SETUP )
         {
-            pin = Wire.I2C_READ();
-            value = Wire.I2C_READ();
+            pin = Wire.I2C_READ_FUNC();
+            value = Wire.I2C_READ_FUNC();
             boards[board].write_bpin_type( pin, value );
+        }
+        else if ( action == EPS_RESET ) // Slave is not sync. anymore, need a protocol restart. Go back to init phase for this board. The reason can be a slave restart
+        {
+            boards[board].connected = false;
+            boards[board].check_state = BOARD_W8_MASTER;
         }
     }
 }
@@ -234,8 +231,8 @@ void eps_write_vpin_type( int pin, uint8_t type) {
 void eps_send_action( uint8_t dest, uint8_t action )
 {
     Wire.beginTransmission( dest );
-    Wire.I2C_WRITE( BOARD_ID );
-    Wire.I2C_WRITE( action );
+    Wire.I2C_WRITE_FUNC( BOARD_ID );
+    Wire.I2C_WRITE_FUNC( action );
     Wire.endTransmission();
     delayMicroseconds(2);  //needs at least 1.3us free time between start and stop /** Credits : http://www.bajdi.com/arduino-sketches/mag3110.ino **/
 }
@@ -243,9 +240,9 @@ void eps_send_action( uint8_t dest, uint8_t action )
 void eps_send_version( int dest )
 {
     Wire.beginTransmission( dest );
-    Wire.I2C_WRITE( BOARD_ID );
-    Wire.I2C_WRITE( EPS_VERSION );
-    Wire.I2C_WRITE( EPS_PROTOCOL_VERSION );
+    Wire.I2C_WRITE_FUNC( BOARD_ID );
+    Wire.I2C_WRITE_FUNC( EPS_VERSION );
+    Wire.I2C_WRITE_FUNC( EPS_PROTOCOL_VERSION );
     Wire.endTransmission();
     delayMicroseconds(2);  //needs at least 1.3us free time between start and stop /** Credits : http://www.bajdi.com/arduino-sketches/mag3110.ino **/
 }
@@ -258,23 +255,23 @@ void eps_send_board_update(uint8_t dest)
         byte count=2;
         int value=0;
         Wire.beginTransmission( dest+1 ); // Open th I2C link (i.e master)
-        Wire.I2C_WRITE( BOARD_ID );
-        Wire.I2C_WRITE( EPS_ALL );
+        Wire.I2C_WRITE_FUNC( BOARD_ID );
+        Wire.I2C_WRITE_FUNC( EPS_ALL );
 
         while ( !boards[dest].pin_update_queue.isEmpty() && count < BUFFER_LENGTH-2)
         {
             up = boards[dest].pin_update_queue.pop();
-            Wire.I2C_WRITE( up.type );
-            Wire.I2C_WRITE( up.pin );
+            Wire.I2C_WRITE_FUNC( up.type );
+            Wire.I2C_WRITE_FUNC( up.pin );
             if ( up.type == EPS_SET ) {
                 value = boards[dest].read_bpin(up.pin);
-                Wire.I2C_WRITE( (byte) ( ( value & 0xFF00)>>8 ) );
-                Wire.I2C_WRITE( (byte) ( value & 0x00FF ) );
+                Wire.I2C_WRITE_FUNC( (byte) ( ( value & 0xFF00)>>8 ) );
+                Wire.I2C_WRITE_FUNC( (byte) ( value & 0x00FF ) );
                 count = count+2+2;
             }
             else if ( up.type == EPS_SETUP )
             {
-                Wire.I2C_WRITE( boards[dest].read_bpin_type(up.pin) );
+                Wire.I2C_WRITE_FUNC( boards[dest].read_bpin_type(up.pin) );
                 count = count+2+1;
             }
         }
@@ -304,15 +301,15 @@ byte eps_send_board_value(uint8_t dest)
     Wire.beginTransmission( dest+1 ); // Open th I2C link
     ///< ACK
     i2c_destination = dest+1;
-    Wire.I2C_WRITE( BOARD_ID );
-    Wire.I2C_WRITE( EPS_SET );
+    Wire.I2C_WRITE_FUNC( BOARD_ID );
+    Wire.I2C_WRITE_FUNC( EPS_SET );
     for( j =0; j< ((BUFFER_LENGTH-2)/3) ; ++j ) // Loop to send all entries. TWI buffer is only 32 Byte. We send 3 byte during each "for" loop
     {
         if ( ( boards[dest].read_bpin_type(next_send_pin)  & PIN_TYPE_IO_MASK ) == PIN_TYPE_OUTPUT )
         {
-            Wire.I2C_WRITE( next_send_pin );
-            Wire.I2C_WRITE( (byte) ((boards[dest].pin_values[next_send_pin]->value & 0xFF00) >> 8)  );
-            Wire.I2C_WRITE( (byte) (boards[dest].pin_values[next_send_pin]->value & 0x00FF) );
+            Wire.I2C_WRITE_FUNC( next_send_pin );
+            Wire.I2C_WRITE_FUNC( (byte) ((boards[dest].pin_values[next_send_pin]->value & 0xFF00) >> 8)  );
+            Wire.I2C_WRITE_FUNC( (byte) (boards[dest].pin_values[next_send_pin]->value & 0x00FF) );
         }
         next_send_pin = (next_send_pin+1) % PINS_PER_BOARD;
         if ( next_send_pin == 0 )

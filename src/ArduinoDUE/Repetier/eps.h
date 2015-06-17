@@ -21,35 +21,35 @@
 
 /***********************************************************************
  * EPS : Extension Pin System
- * 
- * Provide more pin for a arduino master. You can use as much Arduino 
+ *
+ * Provide more pin for a arduino master. You can use as much Arduino
  * slave you like.
- * 
- * Slave doesnt know his pin-mapping, and all the configuration is 
+ *
+ * Slave doesnt know his pin-mapping, and all the configuration is
  * provided by the Master. A time_out system detect when a slave/master
  *  is deconnected.
- * 
+ *
  *  A Pin can be OUT or INPUT.
- * 
+ *
  *  INPUT pin are monitored and sent to master periodicaly when values
- * changed. Futhermore, user can specify FAST or STANDARD (default) 
+ * changed. Futhermore, user can specify FAST or STANDARD (default)
  * monitoring. COUNTER pin is inherited from PIN, and provide a counter.
  * Check doc/code for futher information.
- * 
+ *
  * Handshake :
- * 
+ *
  * Wait > Check Version > Init > Running
- * 
+ *
  * ********************************************************************/
 
 #if defined(ARDUINO) && ARDUINO >= 100
-#define I2C_WRITE write 
-#define I2C_READ read
+#define I2C_WRITE_FUNC write
+#define I2C_READ_FUNC read
 #include "Arduino.h"
 #else
 #include "WProgram.h"
-#define I2C_WRITE send
-#define I2C_READ receive
+#define I2C_WRITE_FUNC send
+#define I2C_READ_FUNC receive
 #endif
 
 #include <inttypes.h>
@@ -61,9 +61,9 @@
 
 
 /***********************************************************************
- * 
+ *
  * Defines
- * 
+ *
  * ********************************************************************/
 
 #define EPS_PROTOCOL_VERSION 1
@@ -78,8 +78,8 @@
 #define EPS_RESET           7
 #define EPS_VERSION         8
 #define EPS_INIT            9
-#define EPS_TOKEN			10
-#define EPS_ACK				31
+#define EPS_TOKEN           10
+#define EPS_ACK             31
 
 #define MASTER_ID           1
 
@@ -91,9 +91,9 @@
 class Board;
 
 /***********************************************************************
- * 
+ *
  * Extern Variables & Variables
- * 
+ *
  * ********************************************************************/
 
 extern Board boards[NUM_BOARD];
@@ -101,48 +101,48 @@ extern bool send_entries_flag;
 
 inline uint8_t vpin2bpin(int vpin)
 {
-	if ( vpin < (PINS_PER_BOARD*2) )
-	{
-		vpin -= PINS_PER_BOARD;
-	}
-	else if ( vpin < (PINS_PER_BOARD*3) )
-	{
-		vpin -= (PINS_PER_BOARD*2);
-	}
-	else if ( vpin < (PINS_PER_BOARD*4) )
-	{
-		vpin -= (PINS_PER_BOARD*3);
-	}
-	else if ( vpin < (PINS_PER_BOARD*5) )
-	{
-		vpin -= (PINS_PER_BOARD*4);
-	}
+    if ( vpin < (PINS_PER_BOARD*2) )
+    {
+        vpin -= PINS_PER_BOARD;
+    }
+    else if ( vpin < (PINS_PER_BOARD*3) )
+    {
+        vpin -= (PINS_PER_BOARD*2);
+    }
+    else if ( vpin < (PINS_PER_BOARD*4) )
+    {
+        vpin -= (PINS_PER_BOARD*3);
+    }
+    else if ( vpin < (PINS_PER_BOARD*5) )
+    {
+        vpin -= (PINS_PER_BOARD*4);
+    }
 }
 inline uint8_t vpin2board(int16_t vpin)
 {
-	if ( vpin < (PINS_PER_BOARD*2) )
-	{
-		return 1;
-	}
-	else if ( vpin < (PINS_PER_BOARD*3) )
-	{
-		return  2;
-	}
-	else if ( vpin < (PINS_PER_BOARD*4) )
-	{
-		return 3;
-	}
-	else if ( vpin < (PINS_PER_BOARD*5) )
-	{
-		return 4;
-	}
-	
+    if ( vpin < (PINS_PER_BOARD*2) )
+    {
+        return 1;
+    }
+    else if ( vpin < (PINS_PER_BOARD*3) )
+    {
+        return  2;
+    }
+    else if ( vpin < (PINS_PER_BOARD*4) )
+    {
+        return 3;
+    }
+    else if ( vpin < (PINS_PER_BOARD*5) )
+    {
+        return 4;
+    }
+
 }
 
 /***********************************************************************
- * 
+ *
  * Read/Write Functions
- * 
+ *
  * ********************************************************************/
 
 // READ
@@ -157,11 +157,11 @@ void eps_set_vpin_value( int pin, int value);
 void eps_write_vpin_type( int pin, uint8_t type);
 
 /***********************************************************************
- * 
+ *
  * Functions
- * 
+ *
  * ********************************************************************/
- 
+
 void eps_manage();
 
 void eps_send_action( uint8_t dest, uint8_t action );
@@ -181,17 +181,17 @@ void setup_slave_master();
 int get_update_queues_size();
 
 /***********************************************************************
- * 
- * ACK 
- * 
+ *
+ * ACK
+ *
  * ********************************************************************/
- 
+
 void eps_check_ack();
 void eps_ack_reset();
 /*
 #ifdef IS_MASTER && ARDUINO < 100 // welll...arduino dont know new/delete...but it's ok for INO...
  void operator delete(void * p);
- void * operator new(size_t size); 
+ void * operator new(size_t size);
 #endif
 */
 

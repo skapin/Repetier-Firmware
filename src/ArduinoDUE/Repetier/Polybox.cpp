@@ -128,7 +128,7 @@ bool is_printer_mode()
  **********************************************************************/
 void init_polybox()
 {
-    setup_slave_master();
+    //setup_slave_master();
     init_slaves();
     init_printer();
     init_cn();

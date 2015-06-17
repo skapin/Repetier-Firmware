@@ -859,7 +859,7 @@ void TIMER1_COMPA_VECTOR ()
 #endif
     }
     else waitRelax--;
-    
+
     setTimer(10000);
   }
 }

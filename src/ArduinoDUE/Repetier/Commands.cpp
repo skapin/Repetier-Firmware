@@ -20,6 +20,8 @@
 */
 
 #include "Repetier.h"
+#include "eps.h"
+#include "Board.h"
 
 const int sensitive_pins[] PROGMEM = SENSITIVE_PINS; // Sensitive pin list for M42
 int Commands::lowestRAMValue = MAX_RAM;
@@ -68,6 +70,7 @@ void Commands::commandLoop()
 void Commands::checkForPeriodicalActions(bool allowNewMoves)
 {
     Printer::handleInterruptEvent();
+    eps_manage();
     EVENT_PERIODICAL;
     if(!executePeriodical) return;
     executePeriodical = 0;
@@ -1965,9 +1968,12 @@ void Commands::processMCode(GCode *com)
 /* ___________________CNC_______________________ */
 #if POLYBOX3D_ENABLE // defined in pins.h
     case 10: // vacuum on
-    {    }    break;
+    {
+
+         }    break;
     case 11: // vacuum off
-        {    }    break;
+        {
+                }    break;
     case 600:   {  Com::printPolybox( com->M );( checkFreeMemory() ); Com::printFLN(Com::tSpace,lowestRAMValue); }    break;
     case 611: // Get CNCTool plugged
     {
@@ -1994,8 +2000,8 @@ void Commands::processMCode(GCode *com)
     break;
     case 613: // Get Lubrivant level ok
     {
-        // @TO_TEST Com::printPolybox( com->M );
-        // @TO_TEST Com::printFLN(Com::tSpace, get_lub_level());
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, get_lub_level());
     }
     break;
     case 614: // Get Vacuum detected
@@ -2025,8 +2031,8 @@ void Commands::processMCode(GCode *com)
 /* ___________________SCANNER_______________________ */
     case 620:    //get scanner status
     {
-  //      Com::printPolybox( com->M );
-  //      Com::printFLN(Com::tSpace,1); // send 1 for ready/ok
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace,1); // send 1 for ready/ok
     }
     break;
     case 621: // Get turntable plugged
@@ -2037,11 +2043,11 @@ void Commands::processMCode(GCode *com)
     break;
     case 622:    // Get laser plugged
     {
-        // @TO_TEST Com::printPolybox( com->M );
-        // @TO_TEST Com::printF(Com::tSpaceP, 0);
-        // @TO_TEST Com::printF(Com::tColon, laser_detected(0) );
-        // @TO_TEST Com::printF(Com::tSpaceP, 1);
-        // @TO_TEST Com::printFLN(Com::tColon, laser_detected(1) );
+        Com::printPolybox( com->M );
+        Com::printF(Com::tSpaceP, 0);
+        Com::printF(Com::tColon, laser_detected(0) );
+        Com::printF(Com::tSpaceP, 1);
+        Com::printFLN(Com::tColon, laser_detected(1) );
     }
     break;
     case 624:    // Set  turntable On/Off
@@ -2069,7 +2075,6 @@ void Commands::processMCode(GCode *com)
     }
     case 629:    // Set laser On/Off
     {
-        /* @TO_TEST
         if ( com->hasP() && com->hasS() && laser_detected(com->P) )
         {
             if ( com->P == 0 )
@@ -2080,7 +2085,7 @@ void Commands::processMCode(GCode *com)
             {
                 WRITE_VPIN( LASER_1_PIN, (com->S) );
             }
-        }*/
+        }
     }
     break;
     case 631:    // Set LaserRotation On/Off
@@ -2429,16 +2434,16 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() )
         {
-            // @TO_TEST set_atu( com->S );
+            set_atu( com->S );
         }
     }
     break;
     case 682: //get box open or not
     {
-        /* @TO_TEST Com::printPolybox( com->M );
+        Com::printPolybox( com->M );
         //Com::printFLN(Com::tSpace,0);
         Com::printFLN(Com::tSpace,is_box_open());
-        */
+
     }
     break;
     case 683: // check connected board
@@ -2454,9 +2459,8 @@ void Commands::processMCode(GCode *com)
     break;
     case 684: // is IC open ?
     {
-        /* @TO_TEST Com::printPolybox( com->M );
+        Com::printPolybox( com->M );
         Com::printFLN(Com::tSpace, is_ic_open());
-        */
     }
     break;
     case 685: // PRE-ASI monitor
@@ -2467,7 +2471,7 @@ void Commands::processMCode(GCode *com)
     break;
     case 686: // temp around board
     {
-        // @TO_TEST Com::printPolybox( com->M );
+        //Com::printPolybox( com->M );
         // @TO_TEST Com::printFLN(Com::tSpaceT0Colon, chamber.getCurrentICTemp() );
     }
     break;
@@ -2503,24 +2507,22 @@ void Commands::processMCode(GCode *com)
     break;
     case 693: // MCODE_GLOBAL_GET_GYRO_ABSOLU
     {
-        /* @TO_TEST Point p = table.captor.getCurrentAngle();
+        Point p = table.captor.getCurrentAngle();
 
         Com::printPolybox( com->M );
         Com::printF(Com::tSpaceZ0Colon, p.x );
         Com::printF(Com::tSpaceZ1Colon, p.y );
         Com::printFLN(Com::tSpaceZ2Colon, p.z );
-        */
     }
     break;
     case 694: // MCODE_GLOBAL_GET_GYRO_RELATIF
     {
-        /* @TO_TEST Point p = table.getCurrentAngle();
+        Point p = table.getCurrentAngle();
 
         Com::printPolybox( com->M );
         Com::printF(Com::tSpaceZ0Colon, 0 );
         Com::printF(Com::tSpaceZ1Colon, 0 );
         Com::printFLN(Com::tSpaceZ2Colon, 0 );
-        */
     }
     break;
     case 695: // MCODE_GLOBAL_SET_GYRO_OFFSET
@@ -2528,7 +2530,7 @@ void Commands::processMCode(GCode *com)
 
         if ( com->hasX() && com->hasY() && com->hasZ() )
         {
-            // @TO_TEST table.setOffset( {com->X, com->Y, com->Z } );
+            table.setOffset( {com->X, com->Y, com->Z } );
             Com::printPolybox( com->M );
             Com::printFLN(Com::tSpace, 1);
         }
@@ -2552,8 +2554,8 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() )
         {
-            // @TO_TEST i2c_update_time = com->S;
-            //OUT_P_LN(" I2C Timer updated.");
+            i2c_update_time = com->S;
+            OUT_P_LN(" I2C Timer updated.");
         }
     }
     break;
@@ -2598,7 +2600,7 @@ void Commands::processMCode(GCode *com)
     case 706:
     {
         lvm_set_connected_light();
-        //eps_send_board_update( 4 );
+        eps_send_board_update( 4 );
     }
     break;
     case 710:
