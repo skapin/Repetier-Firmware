@@ -2562,6 +2562,7 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasP() )
         {
+            VPIN_MODE(com->P, INPUT);
             Com::printPolybox( com->M );
             Com::printFLN(Com::tSpacePColon, READ_VPIN(com->P) );
         }

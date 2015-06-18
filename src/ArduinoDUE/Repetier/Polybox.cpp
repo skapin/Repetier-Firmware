@@ -233,6 +233,7 @@ void init_atu_inter()
         Com::printPolybox( 708 );
         Com::printFLN(Com::tSpace, "ATU mode is OFF");
     }
+
     SETUP_PIN(ATU_MAIN, PIN_TYPE_INPUT);
 
     /***** POWER *****/
@@ -244,8 +245,10 @@ void init_atu_inter()
     SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_INPUT );
 
     ///monitor
-    SETUP_PIN(MON_POWER_0, PIN_TYPE_INPUT );
-    SETUP_PIN(MON_POWER_1, PIN_TYPE_INPUT );
+    /*
+     * @ TO DO
+     * SETUP_PIN(MON_POWER_0, PIN_TYPE_INPUT );
+    SETUP_PIN(MON_POWER_1, PIN_TYPE_INPUT );*/
 
     SETUP_PIN( MON_POWER_00, PIN_TYPE_INPUT );
     SETUP_PIN( MON_POWER_11, PIN_TYPE_INPUT );

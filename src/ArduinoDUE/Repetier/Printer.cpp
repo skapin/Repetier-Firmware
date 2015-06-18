@@ -987,6 +987,7 @@ void Printer::setup()
     distortion.init();
 #endif // DISTORTION_CORRECTION
 
+    EVENT_START_UP
     updateDerivedParameter();
     Commands::checkFreeMemory();
     Commands::writeLowestFreeRAM();
@@ -1022,7 +1023,7 @@ void Printer::setup()
     HAL::servoMicroseconds(3,SERVO3_NEUTRAL_POS, 1000);
   #endif
 #endif
-EVENT_START_UP
+
 }
 
 void Printer::defaultLoopActions()

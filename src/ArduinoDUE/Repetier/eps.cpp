@@ -146,13 +146,15 @@ int eps_read_vpin_value( int pin )
     }
     else if ( pin < PINS_PER_BOARD ) // Master board
     {
-        if ( IS_DIGITAL(boards[0].pin_values[pin]->type) ) // digital
+        /*if ( IS_DIGITAL(boards[0].pin_values[pin]->type) ) // digital
         {
             boards[0].write_bpin( pin, HAL::digitalRead(pin) ) ;
-        }
+        }*/
         //
         // handle ANALOG ?????????
         //
+
+        boards[0].write_bpin( pin, HAL::digitalRead(pin) ) ;
         return boards[0].read_bpin( pin );
     }
     else // virtual pin / slave boards
@@ -191,7 +193,6 @@ void eps_set_vpin_value( int pin, int value)
     }
     else // start virtual pin (i.e other Arduino board)
     {
-        return;
         uint8_t real_pin = vpin2bpin(pin);
         uint8_t board_n = vpin2board(pin);
 
@@ -209,22 +210,41 @@ void eps_set_vpin_value( int pin, int value)
     }
 }
 
-void eps_write_vpin_type( int pin, uint8_t type) {
-    uint8_t real_pin = vpin2bpin(pin);
-    uint8_t board_n = vpin2board(pin);
-    if ( pin >= PINS_PER_BOARD ) // start virtual pin (i.e other Arduino board)
+void eps_write_vpin_type( int pin, uint8_t type)
+{
+    if ( pin >= (PINS_PER_BOARD*NUM_BOARD) )
+    {
+        return;
+    }
+    else if ( pin >= PINS_PER_BOARD ) // start virtual pin (i.e other Arduino board)
     // So we need to update the fifo queue.
     {
         #if EMULATE_SLAVE <= 1
+        uint8_t real_pin = vpin2bpin(pin);
+        uint8_t board_n = vpin2board(pin);
         Update u = {real_pin, EPS_SETUP};
         boards[board_n].pin_update_queue.push( u );
+        boards[board_n].pin_values[real_pin]->type = type ;
         #endif
     }
     else
     {
-        pinMode(real_pin, type & PIN_TYPE_IO_MASK );
+        if ( (type & PIN_TYPE_IO_MASK )== PIN_TYPE_OUTPUT )
+        {
+            SET_OUTPUT_VAR(pin);
+        }
+        else if ( (type & PIN_TYPE_IO_MASK ) == PIN_TYPE_INPUT )
+        {
+            SET_INPUT_VAR(pin);
+        }
+        else
+        {
+            return;
+        }
+        //pinMode(real_pin, type & PIN_TYPE_IO_MASK );
+        boards[0].pin_values[pin]->type = type ;
     }
-    boards[board_n].pin_values[real_pin]->type = type ;
+
 }
 
 void eps_send_action( uint8_t dest, uint8_t action )
