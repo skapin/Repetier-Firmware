@@ -226,6 +226,13 @@ void init_mon()
 }
 void init_atu_inter()
 {
+
+    if ( !ENABLE_ATU )
+    {
+        Com::printFLN(Com::tError,"ATU mode is OFF");
+        Com::printPolybox( 708 );
+        Com::printFLN(Com::tSpace, "ATU mode is OFF");
+    }
     SETUP_PIN(ATU_MAIN, PIN_TYPE_INPUT);
 
     /***** POWER *****/

@@ -70,7 +70,6 @@ void Commands::commandLoop()
 void Commands::checkForPeriodicalActions(bool allowNewMoves)
 {
     Printer::handleInterruptEvent();
-    eps_manage();
     EVENT_PERIODICAL;
     if(!executePeriodical) return;
     executePeriodical = 0;

@@ -157,7 +157,6 @@ int eps_read_vpin_value( int pin )
     }
     else // virtual pin / slave boards
     {
-        return 0;
         return boards[vpin2board(pin)].read_bpin( vpin2bpin(pin) );
     }
 
