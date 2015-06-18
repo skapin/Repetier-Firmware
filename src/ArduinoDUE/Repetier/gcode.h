@@ -46,6 +46,7 @@ public:
     float K;
     float L;
     float O;
+    bool Poly;
 
     char *text; //text[17];
     //moved the byte to the end and aligned ints on short boundary
@@ -55,6 +56,11 @@ public:
     // True if origin did not come from serial console. That way we can send status messages to
     // a host only if he would normally not know about the mode switch.
     bool internalCommand;
+
+    inline bool isPoly()
+    {
+        return Poly;
+    }
     inline bool hasM()
     {
         return ((params & 2)!=0);
@@ -219,6 +225,9 @@ private:
     static volatile uint8_t bufferLength; ///< Number of commands stored in gcode_buffer
     static millis_t timeOfLastDataPacket; ///< Time, when we got the last data packet. Used to detect missing uint8_ts.
     static uint8_t formatErrors; ///< Number of sequential format errors
+
+    static uint32_t lastLinePolyboxNumber; ///< Last line number received from Polybox.
+    static uint32_t actLinePolyboxNumber; ///< Line number of current command from Polybox.
 };
 
 

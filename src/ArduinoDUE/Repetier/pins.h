@@ -501,8 +501,8 @@ STEPPER_CURRENT_CONTROL
 #define INTER_COM_ONOFF_00  (28 +PINS_PER_BOARD*ID_BOARD_ATU)
 #define INTER_COM_ONOFF_11  (30 +PINS_PER_BOARD*ID_BOARD_ATU)
 ///monitor
-#define MON_POWER_0         1
-#define MON_POWER_1         0
+#define MON_POWER_0         1 // !! RX/
+#define MON_POWER_1         0 // !! TX/
 ///same, x2 for safety
 #define MON_POWER_00        (19 +PINS_PER_BOARD*ID_BOARD_ATU)
 #define MON_POWER_11        (18 +PINS_PER_BOARD*ID_BOARD_ATU)
@@ -522,6 +522,8 @@ STEPPER_CURRENT_CONTROL
 #define IC_OPEN_1_PIN       (17+PINS_PER_BOARD*1)
 
 #define SELECT_LVM          (28 +PINS_PER_BOARD*4)
+
+#define RESET_SLAVES        52
 
 /***********************************************************************
  *                    SCANNER

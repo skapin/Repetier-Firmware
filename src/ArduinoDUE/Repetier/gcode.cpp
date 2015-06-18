@@ -44,6 +44,9 @@ volatile uint8_t GCode::bufferLength = 0; ///< Number of commands stored in gcod
 millis_t GCode::timeOfLastDataPacket = 0; ///< Time, when we got the last data packet. Used to detect missing uint8_ts.
 uint8_t  GCode::formatErrors = 0;
 
+uint32_t GCode::lastLinePolyboxNumber = 0; ///< Last line number received from Polybox.
+uint32_t GCode::actLinePolyboxNumber; ///< Line number of current command from Polybox.
+
 /** \page Repetier-protocol
 
 \section Introduction
@@ -172,7 +175,15 @@ void GCode::checkAndPushCommand()
     {
         if(M == 110)   // Reset line number
         {
-            lastLineNumber = actLineNumber;
+            if ( isPoly() )
+            {
+                lastLinePolyboxNumber = actLinePolyboxNumber;
+                Com::printPolybox();
+            }
+            else
+            {
+                lastLineNumber = actLineNumber;
+            }
             Com::printFLN(Com::tOk);
             waitingForResend = -1;
             return;
@@ -193,43 +204,92 @@ void GCode::checkAndPushCommand()
     }
     if(hasN())
     {
-        if((((lastLineNumber + 1) & 0xffff) != (actLineNumber & 0xffff)))
+        if ( isPoly() )
         {
-            if(static_cast<uint16_t>(lastLineNumber - actLineNumber) < 40)
+            if((((lastLinePolyboxNumber+1) & 0xffff)!=(actLinePolyboxNumber&0xffff)))
             {
-                // we have seen that line already. So we assume it is a repeated resend and we ignore it
-                commandsReceivingWritePosition = 0;
-                Com::printFLN(Com::tSkip,actLineNumber);
-                Com::printFLN(Com::tOk);
-            }
-            else if(waitingForResend < 0)  // after a resend, we have to skip the garbage in buffers, no message for this
-            {
-                if(Printer::debugErrors())
-                {
-                    Com::printF(Com::tExpectedLine, lastLineNumber + 1);
-                    Com::printFLN(Com::tGot, actLineNumber);
+                if(static_cast<uint16_t>(lastLinePolyboxNumber - actLinePolyboxNumber) < 40) {
+                    // we have seen that line already. So we assume it is a repeated resend and we ignore it
+                    commandsReceivingWritePosition = 0;
+                    Com::printFLN(Com::tSkip,actLinePolyboxNumber);
+                    Com::printPolybox(707);
+                    Com::printF(Com::tSpace);
+                    Com::printFLN(Com::tOk);
                 }
-                requestResend(); // Line missing, force resend
+                else
+                if(waitingForResend<0)   // after a resend, we have to skip the garbage in buffers, no message for this
+                {
+                    if(Printer::debugErrors())
+                    {
+                        Com::printPolybox(707);
+                        Com::printF(Com::tExpectedLine,lastLinePolyboxNumber+1);
+                        Com::printFLN(Com::tGot,actLinePolyboxNumber);
+                    }
+                    //requestResend(); // Line missing, force resend
+                }
+                else
+                {
+                    --waitingForResend;
+                    commandsReceivingWritePosition = 0;
+                    Com::printPolybox(707);
+                    Com::printFLN(Com::tSkip,actLinePolyboxNumber);
+                    Com::printPolybox(707);
+                    Com::printFLN(Com::tOk);
+                }
+                return;
             }
-            else
+            lastLinePolyboxNumber = actLinePolyboxNumber;
+        }// end poly line
+        else
+        {
+            if((((lastLineNumber+1) & 0xffff)!=(actLineNumber&0xffff)))
             {
-                --waitingForResend;
-                commandsReceivingWritePosition = 0;
-                Com::printFLN(Com::tSkip, actLineNumber);
-                Com::printFLN(Com::tOk);
+                if(static_cast<uint16_t>(lastLineNumber - actLineNumber) < 40) {
+                    // we have seen that line already. So we assume it is a repeated resend and we ignore it
+                    commandsReceivingWritePosition = 0;
+                    Com::printFLN(Com::tSkip,actLineNumber);
+                    Com::printFLN(Com::tOk);
+                }
+                else
+                if(waitingForResend<0)   // after a resend, we have to skip the garbage in buffers, no message for this
+                {
+                    if(Printer::debugErrors())
+                    {
+                        Com::printF(Com::tExpectedLine,lastLineNumber+1);
+                        Com::printFLN(Com::tGot,actLineNumber);
+                    }
+                    requestResend(); // Line missing, force resend
+                }
+                else
+                {
+                    --waitingForResend;
+                    commandsReceivingWritePosition = 0;
+                    Com::printFLN(Com::tSkip,actLineNumber);
+                    Com::printFLN(Com::tOk);
+                }
+                return;
             }
-            return;
-        }
-        lastLineNumber = actLineNumber;
+            lastLineNumber = actLineNumber;
+        } // end no poly line
     }
     pushCommand();
 #ifdef DEBUG_COM_ERRORS
     if(M == 667)
         return; // omit ok
 #endif
-#if ACK_WITH_LINENUMBER
-    Com::printFLN(Com::tOkSpace, actLineNumber);
+#ifdef ACK_WITH_LINENUMBER
+    if ( isPoly() )
+    {
+        Com::printPolybox();
+        Com::printFLN(Com::tOkSpace,actLinePolyboxNumber);
+    }
+    else
+    {
+        Com::printFLN(Com::tOkSpace,actLineNumber);
+    }
 #else
+    if ( isPoly() )
+        Com::printPolybox();
     Com::printFLN(Com::tOk);
 #endif
     wasLastCommandReceivedAsBinary = sendAsBinary;
@@ -702,17 +762,32 @@ bool GCode::parseAscii(char *line,bool fromSerial)
     params = 0;
     params2 = 0;
     internalCommand = !fromSerial;
+    Poly = false;
     char c;
     while ( (c = *(pos++)) )
     {
         switch(c)
         {
+        case '#':
+        {
+            Poly = true;
+            break;
+        }
         case 'N':
         case 'n':
         {
-            actLineNumber = parseLongValue(pos);
-            params |=1;
-            N = actLineNumber;
+            if ( isPoly() )
+            {
+                actLinePolyboxNumber = parseLongValue(pos);
+                params |=1;
+                N = actLinePolyboxNumber;
+            }
+            else
+            {
+                actLineNumber = parseLongValue(pos);
+                params |=1;
+                N = actLineNumber;
+            }
             break;
         }
         case 'G':
@@ -857,6 +932,10 @@ bool GCode::parseAscii(char *line,bool fromSerial)
             {
                 if(Printer::debugErrors())
                 {
+                    if ( isPoly() )
+                    {
+                        Com::printPolybox( 666 );
+                    }
                     Com::printErrorFLN(Com::tWrongChecksum);
                 }
                 return false; // mismatch
@@ -870,10 +949,22 @@ bool GCode::parseAscii(char *line,bool fromSerial)
 
     if(hasFormatError() || (params & 518)==0)   // Must contain G, M or T command and parameter need to have variables!
     {
-        formatErrors++;
-        if(Printer::debugErrors())
-            Com::printErrorFLN(Com::tFormatError);
-        if(formatErrors<3) return false;
+        #if POLYBOX3D_ENABLE
+            Com::printPolybox( 666 );
+            Com::println();
+        #endif
+        if ( this->isPoly() )
+        {
+            formatErrors = 0;
+            return true;
+        }
+        else
+        {
+            formatErrors++;
+            if(Printer::debugErrors())
+                Com::printErrorFLN(Com::tFormatError);
+            if(formatErrors<3) return false;
+        }
     }
     else formatErrors = 0;
     return true;

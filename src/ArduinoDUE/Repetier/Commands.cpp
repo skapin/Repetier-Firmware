@@ -2192,7 +2192,7 @@ void Commands::processMCode(GCode *com)
             Com::printF(Com::tSpaceP, i);
             Com::printF(Com::tColon, faces[LVM_FACES_NUM].get_detected() );
         }
-        OUT_P_LN("");
+        Com::println();
     }
     break;
     case 649: // set labview controller (remote control or software)
@@ -2267,7 +2267,7 @@ void Commands::processMCode(GCode *com)
             Com::printF(Com::tSpaceZ0Colon, READ_VPIN(DETECTION_E0) );
         if ( DETECTION_E1 > -1 )
             Com::printF(Com::tSpaceZ1Colon, READ_VPIN(DETECTION_E1) );
-        OUT_P_LN("");
+        Com::println();
     }
     break;
     case 663: // Get wire detected.
@@ -2453,7 +2453,7 @@ void Commands::processMCode(GCode *com)
             OUT_P_I(" A", i);
             Com::printF(Com::tColon, boards[i].connected);
         }
-        OUT_P_LN("");
+        Com::println();
     }
     break;
     case 684: // is IC open ?
@@ -2481,7 +2481,7 @@ void Commands::processMCode(GCode *com)
             Com::printF(Com::tSpaceZ0Colon, READ_VPIN(MON_POWER_0) );
         if ( MON_POWER_1 > -1 )
             Com::printF(Com::tSpaceZ1Colon, READ_VPIN(MON_POWER_1) );
-        OUT_P_LN("");
+        Com::println();
     }
     break;
     case 689:// get tool bloc ATU
@@ -2589,6 +2589,15 @@ void Commands::processMCode(GCode *com)
     {
         Com::printPolybox( com->M );
         Com::printFLN( Com::tNewline );
+    }
+    break;
+    case 704: // reset slave
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN( "Reset Slave" );
+        WRITE( RESET_SLAVES, HIGH );
+        delayMicroseconds(2);
+        WRITE( RESET_SLAVES, LOW );
     }
     break;
     case 705:

@@ -244,6 +244,8 @@ void init_atu_inter()
     SETUP_PIN( INTER_COM_ONOFF_00, PIN_TYPE_INPUT );
     SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_INPUT );
 
+    SETUP_PIN( RESET_SLAVES, PIN_TYPE_OUTPUT );
+
     ///monitor
     /*
      * @ TO DO
