@@ -313,7 +313,7 @@ void eps_clear_queue()
         boards[board_idx].clear_queue();
     }
 }
-
+/*
 byte eps_send_board_value(uint8_t dest)
 {
     uint8_t j;
@@ -339,7 +339,7 @@ byte eps_send_board_value(uint8_t dest)
     }
     Wire.endTransmission();
     return true; // true
-}
+}*/
 
 // function that executes whenever data is received from master
 // this function is registered as an event, see setup()

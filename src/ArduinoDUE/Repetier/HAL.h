@@ -293,7 +293,7 @@ extern RFDoubleSerial BTAdapter;
 #endif
 
 
-#define OUT_P_I(p,i) //Com::printF(PSTR(p),(int)(i))
+#define OUT_P_I(p,i) Com::printF(PSTR(p),(int)(i))
 #define OUT_P_I_LN(p,i) //Com::printFLN(PSTR(p),(int)(i))
 #define OUT_P_L(p,i) //Com::printF(PSTR(p),(long)(i))
 #define OUT_P_L_LN(p,i) //Com::printFLN(PSTR(p),(long)(i))

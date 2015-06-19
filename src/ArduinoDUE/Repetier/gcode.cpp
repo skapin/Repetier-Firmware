@@ -236,7 +236,7 @@ void GCode::checkAndPushCommand()
                     Com::printPolybox(707);
                     Com::printFLN(Com::tOk);
                 }
-                return;
+                /////// return;
             }
             lastLinePolyboxNumber = actLinePolyboxNumber;
         }// end poly line

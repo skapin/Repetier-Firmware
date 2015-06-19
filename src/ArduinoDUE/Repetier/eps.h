@@ -117,6 +117,7 @@ inline uint8_t vpin2bpin(int vpin)
     {
         vpin -= (PINS_PER_BOARD*4);
     }
+    return vpin;
 }
 inline uint8_t vpin2board(int16_t vpin)
 {
@@ -168,7 +169,6 @@ void eps_send_action( uint8_t dest, uint8_t action );
 void eps_send_version( int dest );
 
 void eps_send_board_update(uint8_t dest);
-byte eps_send_board_value(uint8_t dest);
 
 void eps_push_all_pin();
 void eps_clear_queue();
