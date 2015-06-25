@@ -161,7 +161,6 @@ void HAL::setupTimer() {
 // Initialize ADC channels
 void HAL::analogStart(void)
 {
-
 #if MOTHERBOARD == 500 || MOTHERBOARD == 501
   PIO_Configure(
     g_APinDescription[58].pPort,
@@ -179,6 +178,11 @@ void HAL::analogStart(void)
   ADC->ADC_WPMR = 0x41444300u; //ADC_WPMR_WPKEY(0);
   pmc_enable_periph_clk(ID_ADC);  // enable adc clock
 
+	//adc_enable_channel( ADC, (adc_channel_num_t)ADC0  );
+	/*adc_enable_channel( ADC, (adc_channel_num_t)ADC7  );
+	adc_enable_channel( ADC, (adc_channel_num_t)ADC13  );
+	adc_enable_channel( ADC, (adc_channel_num_t)ADC4  );*/
+	
   for (int i = 0; i < ANALOG_INPUTS; i++)
   {
     osAnalogInputValues[i] = 0;
@@ -187,6 +191,8 @@ void HAL::analogStart(void)
     adcEnable |= (0x1u << osAnalogInputChannels[i]);
     for (int j = 0; j < ANALOG_INPUT_MEDIAN; j++)
       osAnalogSamples[i][j] = 2048; // we want to prevent early error from bad starting values
+    Com::print(osAnalogInputChannels[i]);
+	Com::print(" ");
   }
   // enable channels
   ADC->ADC_CHER = adcEnable;

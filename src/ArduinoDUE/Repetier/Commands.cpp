@@ -2595,9 +2595,9 @@ void Commands::processMCode(GCode *com)
     {
         Com::printPolybox( com->M );
         Com::printFLN( "Reset Slave" );
-        WRITE( RESET_SLAVES, HIGH );
-        delayMicroseconds(2);
         WRITE( RESET_SLAVES, LOW );
+        delay(100);
+        WRITE( RESET_SLAVES, HIGH );
     }
     break;
     case 705:
@@ -2612,13 +2612,26 @@ void Commands::processMCode(GCode *com)
         eps_send_board_update( 4 );
     }
     break;
+    case 708:
+    {
+		HAL::pingWatchdog();
+		Com::print(analogRead(0));
+		Com::printFLN( "<-A0" );
+		HAL::pingWatchdog();
+		Com::print(analogRead(3));
+		Com::printFLN( Com::tNewline );
+		HAL::pingWatchdog();
+		break;
+	}
     case 710:
     {
         if ( com->hasF() )
         {
             Com::printPolybox( com->M );
             com->G = com->F;
-            Commands::executeGCode( com );
+            com->params = com->params & ~(1<<8); // disable F
+            Commands::processGCode( com);
+            //Commands::executeGCode( com );
             Com::printFLN( Com::tNewline );
         }
 //          Com::printFLN( Com::tNewline );

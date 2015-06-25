@@ -443,16 +443,16 @@ STEPPER_CURRENT_CONTROL
 #define DETECTION_E0        (34 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define DETECTION_E1        (52 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 
-#define HEATER_BED_0        22//(2 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+#define HEATER_BED_0        (2 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_1        (3 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_2        (46 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_3        (44 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 
-#define HEATER_BED_0_SENSOR (11 +PIN_ANALOG)
-#define HEATER_BED_1_SENSOR (12 +PIN_ANALOG)
+#define HEATER_BED_0_SENSOR ADC13//(11 +PIN_ANALOG)
+/*#define HEATER_BED_1_SENSOR (12 +PIN_ANALOG)
 #define HEATER_BED_2_SENSOR (13 +PIN_ANALOG)
 #define HEATER_BED_3_SENSOR (14 +PIN_ANALOG)
-
+*/
 #define DETECTION_BED_0     (42 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define DETECTION_BED_1     (40 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define DETECTION_BED_2     (38 +PINS_PER_BOARD*ID_BOARD_PRINTER)
@@ -560,11 +560,11 @@ STEPPER_CURRENT_CONTROL
 #define THERM_ELEC0         (7 +PIN_ANALOG)
 #define THERM_ELEC1         (6 +PIN_ANALOG)
 
-#define THERM_B1            (3 +PIN_ANALOG)
+#define THERM_B1            ADC4
 #define THERM_CF_B1_B       (5 +PIN_ANALOG)
 #define THERM_CF_B1_H       (4 +PIN_ANALOG)
 
-#define THERM_B0            (0 +PIN_ANALOG)
+#define THERM_B0            ADC7
 #define THERM_CF_B0_B       (2 +PIN_ANALOG)
 #define THERM_CF_B0_H       (1 +PIN_ANALOG)
 
@@ -701,11 +701,15 @@ STEPPER_CURRENT_CONTROL
 
 // Note that on the Due pin A0 on the board is channel 2 on the ARM chip
 #define HEATER_0_PIN            10  // extruder 0
-#define TEMP_0_PIN              THERM_B0  // Due analog pin #
+#define TEMP_0_PIN              THERM_B0
+//THERM_B0  // Due analog pin #
+
 #define HEATER_1_PIN            HEATER_BED_0   // bed
-#define TEMP_1_PIN              HEATER_BED_0_SENSOR  // Due analog pin #
+#define TEMP_1_PIN              HEATER_BED_0_SENSOR
+
 #define HEATER_2_PIN            9   // extruder 1
-#define TEMP_2_PIN              THERM_B1  // Due analog pin #
+#define TEMP_2_PIN              THERM_B1//THERM_B1
+//THERM_B1  // Due analog pin #
 
 #define SDSUPPORT               false
 #define SDPOWER                 -1
