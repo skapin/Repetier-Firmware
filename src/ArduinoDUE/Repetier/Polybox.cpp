@@ -416,6 +416,10 @@ byte is_box_open()
 
 byte laser_detected( uint8_t laser_id )
 {
+	
+	// @todo
+	
+	return 1;
     byte detection = false;
     switch ( laser_id )
     {

@@ -191,8 +191,6 @@ void HAL::analogStart(void)
     adcEnable |= (0x1u << osAnalogInputChannels[i]);
     for (int j = 0; j < ANALOG_INPUT_MEDIAN; j++)
       osAnalogSamples[i][j] = 2048; // we want to prevent early error from bad starting values
-    Com::print(osAnalogInputChannels[i]);
-	Com::print(" ");
   }
   // enable channels
   ADC->ADC_CHER = adcEnable;
