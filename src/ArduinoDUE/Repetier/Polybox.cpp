@@ -238,8 +238,8 @@ void init_atu_inter()
 
     /***** POWER *****/
     ///inter
-    SETUP_PIN( INTER_POWER_0, PIN_TYPE_INPUT );
-    SETUP_PIN( INTER_POWER_1, PIN_TYPE_INPUT );
+    SETUP_PIN( INTER_POWER_0, PIN_TYPE_OUTPUT );
+    SETUP_PIN( INTER_POWER_1, PIN_TYPE_OUTPUT );
 
     SETUP_PIN( INTER_COM_ONOFF_00, PIN_TYPE_INPUT );
     SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_INPUT );
@@ -401,11 +401,18 @@ void set_atu( bool enable )
 {
     if ( enable )
     {
-        Color c = { 255, 0, 0, 255 };
-        lvm_set_light( c );
-        eps_send_board_update( 4 );
+        // cut off power supply
+        enable_PSU( false );
         Commands::emergencyStop();
     }
+}
+
+void enable_PSU( bool enable )
+{
+    // set 0 to the pins enable the PSU
+    WRITE( INTER_POWER_0, !enable );
+    WRITE( INTER_POWER_1, !enable );
+    Com::printFLN( "PSU on:", enable );
 }
 
 

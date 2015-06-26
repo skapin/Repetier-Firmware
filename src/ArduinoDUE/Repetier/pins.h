@@ -719,7 +719,7 @@ STEPPER_CURRENT_CONTROL
 #define LED_PIN                 -1
 #define ORIG_FAN_PIN            11
 #define ORIG_FAN2_PIN           -1
-#define ORIG_PS_ON_PIN          INTER_POWER_0
+#define ORIG_PS_ON_PIN          -1
 #define KILL_PIN                -1
 #define SUICIDE_PIN              -1  //PIN that has to be turned on right after start, to keep power flowing.
 

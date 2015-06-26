@@ -305,12 +305,12 @@ Overridden if EEPROM activated.*/
 #define EXT0_INVERSE false
 #define EXT0_ENABLE_PIN E0_ENABLE_PIN
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
-#define EXT0_ENABLE_ON 1
+#define EXT0_ENABLE_ON 0
 // The following speed settings are for skeinforge 40+ where e is the
 // length of filament pulled inside the heater. For repsnap or older
 // skeinforge use higher values.
 //  Overridden if EEPROM activated.
-#define EXT0_MAX_FEEDRATE 50
+#define EXT0_MAX_FEEDRATE 500
 // Feedrate from halted extruder in mm/s
 //  Overridden if EEPROM activated.
 #define EXT0_MAX_START_FEEDRATE 40
@@ -427,12 +427,12 @@ The codes are only executed for multiple extruder when changing the extruder. */
 #define EXT1_INVERSE false
 #define EXT1_ENABLE_PIN E1_ENABLE_PIN
 // For Inverting Stepper Enable Pins (Active Low) use 0, Non Inverting (Active High) use 1
-#define EXT1_ENABLE_ON 1
+#define EXT1_ENABLE_ON 0
 // The following speed settings are for skeinforge 40+ where e is the
 // length of filament pulled inside the heater. For repsnap or older
 // skeinforge use heigher values.
 //  Overridden if EEPROM activated.
-#define EXT1_MAX_FEEDRATE 100
+#define EXT1_MAX_FEEDRATE 500
 // Feedrate from halted extruder in mm/s
 //  Overridden if EEPROM activated.
 #define EXT1_MAX_START_FEEDRATE 40

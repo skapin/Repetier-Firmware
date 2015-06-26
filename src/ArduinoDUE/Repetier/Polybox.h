@@ -77,6 +77,7 @@ void executeAction(int action, int param); ///<
 void manage_mode();
 bool is_printer_mode();
 void set_atu ( bool enable );
+void enable_PSU( bool enable );
 /***********************************************************************
  *
  *    Check & Get Functions

@@ -2600,16 +2600,19 @@ void Commands::processMCode(GCode *com)
         WRITE( RESET_SLAVES, HIGH );
     }
     break;
-    case 705:
+    case 705: // End of connection
     {
-        lvm_set_unconnected_light();
-        eps_send_board_update( 4 );
+        WRITE( RESET_SLAVES, HIGH );
+        set_atu( true );
     }
     break;
-    case 706:
+    case 706: // Start connection
     {
+        enable_PSU( true );
+        
         lvm_set_connected_light();
         eps_send_board_update( 4 );
+        
     }
     break;
     case 708:
