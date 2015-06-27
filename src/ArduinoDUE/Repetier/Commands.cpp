@@ -2429,7 +2429,7 @@ void Commands::processMCode(GCode *com)
         Com::printFLN(Com::tSpace, READ_VPIN( ATU_MAIN ));
     }
     break;
-    case 681: // Set ATU // @todo
+    case 681: // Set ATU
     {
         if ( com->hasS() )
         {
@@ -2602,28 +2602,28 @@ void Commands::processMCode(GCode *com)
     break;
     case 705: // End of connection
     {
-        WRITE( RESET_SLAVES, HIGH );
-        set_atu( true );
+        set_atu( true ); // Reset Board
     }
     break;
     case 706: // Start connection
     {
-        enable_PSU( true );
-        
-        lvm_set_connected_light();
-        eps_send_board_update( 4 );
-        
+		Com::printPolybox( com->M );
+        Com::printFLN( "Reset Slave" );
+        reset_slaves();
+		lvm_set_connected_light();
+        enable_PSU( true );        
     }
     break;
     case 708:
     {
-		HAL::pingWatchdog();
+		eps_push_all_pin();
+		/*HAL::pingWatchdog();
 		Com::print(analogRead(0));
 		Com::printFLN( "<-A0" );
 		HAL::pingWatchdog();
 		Com::print(analogRead(3));
 		Com::printFLN( Com::tNewline );
-		HAL::pingWatchdog();
+		HAL::pingWatchdog();*/
 		break;
 	}
     case 710:

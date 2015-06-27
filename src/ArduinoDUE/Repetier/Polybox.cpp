@@ -137,12 +137,13 @@ void init_polybox()
     init_scanner();
     init_therm();
     init_lvm();
+        
     //chamber.initAll(); // init fans, heaters, sensors
     //send data to slave i.e force update
 }
 void init_therm()
 {
-    SETUP_PIN( THERM_BOX0, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
+    /*SETUP_PIN( THERM_BOX0, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
     SETUP_PIN( THERM_BOX1, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
     SETUP_PIN( THERM_BOX2, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
 
@@ -155,7 +156,7 @@ void init_therm()
 
     SETUP_PIN( THERM_B0, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
     SETUP_PIN( THERM_CF_B0_B, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
-    SETUP_PIN( THERM_CF_B0_H, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );
+    SETUP_PIN( THERM_CF_B0_H, PIN_TYPE_INPUT | PIN_TYPE_ANALOG );*/
 }
 void init_printer()
 {
@@ -240,9 +241,16 @@ void init_atu_inter()
     ///inter
     SETUP_PIN( INTER_POWER_0, PIN_TYPE_OUTPUT );
     SETUP_PIN( INTER_POWER_1, PIN_TYPE_OUTPUT );
+    
+    // set PSU to off ( 0=ON )
+    WRITE( INTER_POWER_0, 255 );
+    WRITE( INTER_POWER_1, 255 );
 
-    SETUP_PIN( INTER_COM_ONOFF_00, PIN_TYPE_INPUT );
-    SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_INPUT );
+    SETUP_PIN( INTER_COM_ONOFF_00, PIN_TYPE_OUTPUT );
+    SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_OUTPUT );
+     
+    WRITE_VPIN( INTER_COM_ONOFF_00, 255 );
+    WRITE_VPIN( INTER_COM_ONOFF_11, 255 );
 
     SETUP_PIN( RESET_SLAVES, PIN_TYPE_OUTPUT );
 
@@ -309,6 +317,23 @@ void init_scanner()
     SETUP_PIN( TABLE0_STEP_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( TABLE0_DIR_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( TABLE0_ENABLE_PIN, PIN_TYPE_OUTPUT);
+    
+    // set 0
+    
+    WRITE_VPIN( LASER_0_PIN, 0);
+    WRITE_VPIN( L0_STEP_PIN, 0);
+    WRITE_VPIN( L0_DIR_PIN, 0);
+    WRITE_VPIN( L0_ENABLE_PIN, 0);
+
+    WRITE_VPIN( LASER_1_PIN, 0);
+    WRITE_VPIN( L1_STEP_PIN, 0);
+    WRITE_VPIN( L1_DIR_PIN, 0);
+    WRITE_VPIN( L1_ENABLE_PIN, 0);
+
+    WRITE_VPIN( TABLE0_STEP_PIN, 0);
+    WRITE_VPIN( TABLE0_DIR_PIN, 0);
+    WRITE_VPIN( TABLE0_ENABLE_PIN, 0);
+  
 }
 
 /***********************************************************************
@@ -403,6 +428,9 @@ void set_atu( bool enable )
     {
         // cut off power supply
         enable_PSU( false );
+        // reset slave
+        reset_slaves();
+        //Repetier::EmergencyStop
         Commands::emergencyStop();
     }
 }
@@ -545,6 +573,20 @@ void check_all_ATU()
         Commands::emergencyStop();
     }
 
+}
+
+void reset_slaves()
+{
+	WRITE( RESET_SLAVES, LOW );
+	delay(100);
+	WRITE( RESET_SLAVES, HIGH );
+	HAL::pingWatchdog();
+	for ( uint8_t i = 1; i<NUM_BOARD ; ++i)
+	{
+		boards[i].connected = false;
+		boards[i].check_state = BOARD_W8_MASTER;
+	}
+	delay(100);
 }
 
 void check_boards_connected()

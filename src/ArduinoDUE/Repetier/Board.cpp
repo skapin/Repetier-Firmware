@@ -130,6 +130,9 @@ void Board::push_all_pin( )
 {
     for ( uint8_t pin=0; pin<PINS_PER_BOARD ; ++pin)
     {
+		if ( pin == 20  || pin == 21) //SDA SCL
+			continue;
+		
         Update ut = {pin, EPS_SETUP};
         this->pin_update_queue.push( ut );
 
@@ -177,8 +180,8 @@ void Board::manage_status( )
                 {
                     this->check_state = BOARD_OK;
                     this->connected = true;
-                    //this->clear_queue();
-                    //this->push_all_pin();
+                    this->clear_queue();
+                    this->push_all_pin();
                 }
                 else
                 {

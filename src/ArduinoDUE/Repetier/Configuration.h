@@ -1581,12 +1581,12 @@ Values must be in range 1..255
 
 #define NUM_MOTOR_DRIVERS 6
 // #define MOTOR_DRIVER_x StepperDriver<int stepPin, int dirPin, int enablePin,bool invertDir, bool invertEnable>(float stepsPerMM,float speed)
-#define MOTOR_DRIVER_1(var) StepperDriver<7,34,36,0,0> var(100,10)
-#define MOTOR_DRIVER_2(var) StepperDriver<6,38,40,0,0> var(100,10)
-#define MOTOR_DRIVER_3(var) StepperDriver<10,29,27,0,0> var(100,10)
-#define MOTOR_DRIVER_4(var) StepperDriver<46,50,48,0,0> var(100,10)
-#define MOTOR_DRIVER_5(var) StepperDriver<40,47,49,0,0> var(100,10)
-#define MOTOR_DRIVER_6(var) StepperDriver<45,42,43,0,0> var(100,10)
+#define MOTOR_DRIVER_1(var) StepperDriver<7,34,36,0,1> var(100,10)
+#define MOTOR_DRIVER_2(var) StepperDriver<6,38,40,0,1> var(100,10)
+#define MOTOR_DRIVER_3(var) StepperDriver<10,29,27,0,1> var(100,10)
+#define MOTOR_DRIVER_4(var) StepperDriver<46,50,48,0,1> var(100,10)
+#define MOTOR_DRIVER_5(var) StepperDriver<40,47,49,0,1> var(100,10)
+#define MOTOR_DRIVER_6(var) StepperDriver<45,42,43,0,1> var(100,10)
 
 /*
   You can expand firmware functionality with events and you own event handler.
