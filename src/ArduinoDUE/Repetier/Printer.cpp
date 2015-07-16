@@ -599,14 +599,12 @@ uint8_t Printer::setDestinationStepsFromGCode(GCode *com)
     destinationSteps[X_AXIS] = static_cast<int32_t>(floor(x * axisStepsPerMM[X_AXIS] + 0.5f));
     destinationSteps[Y_AXIS] = static_cast<int32_t>(floor(y * axisStepsPerMM[Y_AXIS] + 0.5f));
     destinationSteps[Z_AXIS] = static_cast<int32_t>(floor(z * axisStepsPerMM[Z_AXIS] + 0.5f));
-    if(com->hasE() /*&& !Printer::debugDryrun()*/)
+    if(com->hasE() && !Printer::debugDryrun())
     {
-        Com::printFLN("E ");
         p = convertToMM(com->E * axisStepsPerMM[E_AXIS]);
 
         if(relativeCoordinateMode || relativeExtruderCoordinateMode)
         {
-            Com::printFLN("R ");
             if(
 #if MIN_EXTRUDER_TEMP > 20
                 (Extruder::current->tempControl.currentTemperatureC < MIN_EXTRUDER_TEMP && !Printer::isColdExtrusionAllowed()) ||

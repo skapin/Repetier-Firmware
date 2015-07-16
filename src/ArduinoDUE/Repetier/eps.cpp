@@ -40,6 +40,10 @@ void eps_manage()
         return;
     }
 
+    /*uint32_t time;
+    uint32_t start;
+    start = micros();
+*/
     uint8_t pong_flag = !(i2c_timer % PING_PONG_DELAY);
     uint8_t update_flag = !(i2c_timer % SEND_UPDATE_DELAY);
     uint8_t get_flag = !(i2c_timer % GET_DELAY);
@@ -55,6 +59,7 @@ void eps_manage()
     //{
         // If board connected, do.
         //hardware check to do.
+        HAL::pingWatchdog();
         if ( boards[i2c_current_board].connected )
         {
             if ( update_flag )
@@ -70,6 +75,7 @@ void eps_manage()
             if ( token_flag )
             {
                 eps_send_action( i2c_current_board+1, EPS_TOKEN );
+                HAL::pingWatchdog();
                 Wire.requestFrom(i2c_current_board+1,32);
                 eps_process_incoming_datas( i2c_current_board );
             }
@@ -90,6 +96,12 @@ void eps_manage()
     //eps_check_ack();
 
     i2c_current_board++;
+    HAL::pingWatchdog();
+   /* time = micros() - start;
+    Com::printF(Com::tError,time);
+    Com::printF(" D: ");
+    Com::printF(Com::tError,i2c_timer_delay);
+    Com::printFLN(".");*/
 }
 
 void eps_process_incoming_datas(uint8_t board)

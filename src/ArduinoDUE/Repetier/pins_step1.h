@@ -443,15 +443,15 @@ STEPPER_CURRENT_CONTROL
 #define DETECTION_E0        (34 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define DETECTION_E1        (52 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 
-#define HEATER_BED_0        (2 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+#define HEATER_BED_0        22//(2 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_1        (3 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_2        (46 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_3        (44 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 
-#define HEATER_BED_0_SENSOR ADC13//(11 +PIN_ANALOG)
-#define HEATER_BED_1_SENSOR -1//(12 +PIN_ANALOG)
-#define HEATER_BED_2_SENSOR -1//(13 +PIN_ANALOG)
-#define HEATER_BED_3_SENSOR  -1
+#define HEATER_BED_0_SENSOR (11 +PIN_ANALOG)
+#define HEATER_BED_1_SENSOR (12 +PIN_ANALOG)
+#define HEATER_BED_2_SENSOR (13 +PIN_ANALOG)
+#define HEATER_BED_3_SENSOR (14 +PIN_ANALOG)
 
 #define DETECTION_BED_0     (42 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define DETECTION_BED_1     (40 +PINS_PER_BOARD*ID_BOARD_PRINTER)
@@ -501,8 +501,8 @@ STEPPER_CURRENT_CONTROL
 #define INTER_COM_ONOFF_00  (28 +PINS_PER_BOARD*ID_BOARD_ATU)
 #define INTER_COM_ONOFF_11  (30 +PINS_PER_BOARD*ID_BOARD_ATU)
 ///monitor
-#define MON_POWER_0         1 // !! RX/
-#define MON_POWER_1         0 // !! TX/
+#define MON_POWER_0         1
+#define MON_POWER_1         0
 ///same, x2 for safety
 #define MON_POWER_00        (19 +PINS_PER_BOARD*ID_BOARD_ATU)
 #define MON_POWER_11        (18 +PINS_PER_BOARD*ID_BOARD_ATU)
@@ -522,8 +522,6 @@ STEPPER_CURRENT_CONTROL
 #define IC_OPEN_1_PIN       (17+PINS_PER_BOARD*1)
 
 #define SELECT_LVM          (28 +PINS_PER_BOARD*4)
-
-#define RESET_SLAVES        52
 
 /***********************************************************************
  *                    SCANNER
@@ -560,11 +558,11 @@ STEPPER_CURRENT_CONTROL
 #define THERM_ELEC0         (7 +PIN_ANALOG)
 #define THERM_ELEC1         (6 +PIN_ANALOG)
 
-#define THERM_B1            ADC4
+#define THERM_B1            (3 +PIN_ANALOG)
 #define THERM_CF_B1_B       (5 +PIN_ANALOG)
 #define THERM_CF_B1_H       (4 +PIN_ANALOG)
 
-#define THERM_B0            ADC7
+#define THERM_B0            (0 +PIN_ANALOG)
 #define THERM_CF_B0_B       (2 +PIN_ANALOG)
 #define THERM_CF_B0_H       (1 +PIN_ANALOG)
 
@@ -576,7 +574,7 @@ STEPPER_CURRENT_CONTROL
 
 #define FAN_BOARD_PIN           FAN_BOARD_0
 // FAN_BOARD_0 ///< repetier fan handler
-#define FAN_BOARD_0             150
+#define FAN_BOARD_0             44//150
 #define FAN_BOARD_1             (9 +PINS_PER_BOARD*2)
 
 #define FAN_CHAMBER_PEL_0       (9 +PINS_PER_BOARD*3)
@@ -673,22 +671,22 @@ STEPPER_CURRENT_CONTROL
 #define ORIG_X_STEP_PIN         13
 #define ORIG_X_DIR_PIN          33
 #define ORIG_X_ENABLE_PIN       31
-#define ORIG_X_MIN_PIN          99
-#define ORIG_X_MAX_PIN          101
+#define ORIG_X_MIN_PIN          23//99
+#define ORIG_X_MAX_PIN          28//101
 #define X_HOME_PIN              103
 
 #define ORIG_Y_STEP_PIN         12
 #define ORIG_Y_DIR_PIN          32
 #define ORIG_Y_ENABLE_PIN       30
-#define ORIG_Y_MIN_PIN          105
-#define ORIG_Y_MAX_PIN          107
+#define ORIG_Y_MIN_PIN          24//105
+#define ORIG_Y_MAX_PIN          27//107
 #define Y_HOME_PIN              109
 
 #define ORIG_Z_STEP_PIN         8
 #define ORIG_Z_DIR_PIN          25
 #define ORIG_Z_ENABLE_PIN       23
-#define ORIG_Z_MIN_PIN          111
-#define ORIG_Z_MAX_PIN          113
+#define ORIG_Z_MIN_PIN          25//111
+#define ORIG_Z_MAX_PIN          26//113
 #define Z_HOME_PIN              117
 
 #define ORIG_E0_STEP_PIN         3
@@ -701,15 +699,11 @@ STEPPER_CURRENT_CONTROL
 
 // Note that on the Due pin A0 on the board is channel 2 on the ARM chip
 #define HEATER_0_PIN            10  // extruder 0
-#define TEMP_0_PIN              THERM_B0
-//THERM_B0  // Due analog pin #
-
+#define TEMP_0_PIN              THERM_B0  // Due analog pin #
 #define HEATER_1_PIN            HEATER_BED_0   // bed
-#define TEMP_1_PIN              HEATER_BED_0_SENSOR
-
+#define TEMP_1_PIN              HEATER_BED_0_SENSOR  // Due analog pin #
 #define HEATER_2_PIN            9   // extruder 1
-#define TEMP_2_PIN              THERM_B1//THERM_B1
-//THERM_B1  // Due analog pin #
+#define TEMP_2_PIN              THERM_B1  // Due analog pin #
 
 #define SDSUPPORT               false
 #define SDPOWER                 -1
@@ -719,7 +713,7 @@ STEPPER_CURRENT_CONTROL
 #define LED_PIN                 -1
 #define ORIG_FAN_PIN            11
 #define ORIG_FAN2_PIN           -1
-#define ORIG_PS_ON_PIN          -1
+#define ORIG_PS_ON_PIN          INTER_POWER_0
 #define KILL_PIN                -1
 #define SUICIDE_PIN              -1  //PIN that has to be turned on right after start, to keep power flowing.
 
@@ -733,9 +727,7 @@ STEPPER_CURRENT_CONTROL
 #define E3_PINS ORIG_E3_STEP_PIN,ORIG_E3_DIR_PIN,ORIG_E3_ENABLE_PIN,
 #define E4_PINS ORIG_E4_STEP_PIN,ORIG_E4_DIR_PIN,ORIG_E4_ENABLE_PIN,
 
-//400000
-#define TWI_CLOCK_FREQ          100000
-//#define TWI_CLOCK_FREQ          100000
+#define TWI_CLOCK_FREQ          400000
 // see eeprom device data sheet for the following values these are for 24xx256
 #define EEPROM_SERIAL_ADDR      0x50   // 7 bit i2c address (without R/W bit)
 #define EEPROM_PAGE_SIZE        64     // page write buffer size

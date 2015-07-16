@@ -2607,25 +2607,25 @@ void Commands::processMCode(GCode *com)
     break;
     case 706: // Start connection
     {
-		Com::printPolybox( com->M );
+        Com::printPolybox( com->M );
         Com::printFLN( "Reset Slave" );
         reset_slaves();
-		lvm_set_connected_light();
-        enable_PSU( true );        
+        lvm_set_connected_light();
+        enable_PSU( true );
     }
     break;
     case 708:
     {
-		eps_push_all_pin();
-		/*HAL::pingWatchdog();
-		Com::print(analogRead(0));
-		Com::printFLN( "<-A0" );
-		HAL::pingWatchdog();
-		Com::print(analogRead(3));
-		Com::printFLN( Com::tNewline );
-		HAL::pingWatchdog();*/
-		break;
-	}
+        eps_push_all_pin();
+        /*HAL::pingWatchdog();
+        Com::print(analogRead(0));
+        Com::printFLN( "<-A0" );
+        HAL::pingWatchdog();
+        Com::print(analogRead(3));
+        Com::printFLN( Com::tNewline );
+        HAL::pingWatchdog();*/
+        break;
+    }
     case 710:
     {
         if ( com->hasF() )
