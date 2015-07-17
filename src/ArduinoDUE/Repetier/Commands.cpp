@@ -2057,11 +2057,19 @@ void Commands::processMCode(GCode *com)
         }
     }
     break;
-    case 625:    // TurnTable X stepper
+    case 625:    // Rotate Axis X deg
     {
-        if ( com->hasS() )
+        if ( com->hasS() && com->hasP() && com->hasX() )
         {
-            // @TO_TEST pin_x_steps( TABLE0_STEP_PIN, com->S );
+            int pos = getMotorDriver(com->P)/*RZ*/->getPosition();
+            if ( com->S == 0 )
+            {
+                getMotorDriver(com->P)->gotoPosition( (pos + com->X));
+            }
+            else
+            {
+                getMotorDriver(com->P)->gotoPosition( (pos - com->X));
+            }
         }
     }
     break;
@@ -2638,7 +2646,7 @@ void Commands::processMCode(GCode *com)
             Com::printFLN( Com::tNewline );
         }
 //          Com::printFLN( Com::tNewline );
-
+    break;
     }
     case 721: // polybox
         {

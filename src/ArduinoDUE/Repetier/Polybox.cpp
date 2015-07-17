@@ -137,7 +137,7 @@ void init_polybox()
     init_scanner();
     init_therm();
     init_lvm();
-        
+
     //chamber.initAll(); // init fans, heaters, sensors
     //send data to slave i.e force update
 }
@@ -241,14 +241,14 @@ void init_atu_inter()
     ///inter
     SETUP_PIN( INTER_POWER_0, PIN_TYPE_OUTPUT );
     SETUP_PIN( INTER_POWER_1, PIN_TYPE_OUTPUT );
-    
+
     // set PSU to off ( 0=ON )
     WRITE( INTER_POWER_0, 255 );
     WRITE( INTER_POWER_1, 255 );
 
     SETUP_PIN( INTER_COM_ONOFF_00, PIN_TYPE_OUTPUT );
     SETUP_PIN( INTER_COM_ONOFF_11, PIN_TYPE_OUTPUT );
-     
+
     WRITE_VPIN( INTER_COM_ONOFF_00, 255 );
     WRITE_VPIN( INTER_COM_ONOFF_11, 255 );
 
@@ -303,23 +303,23 @@ void init_scanner()
     SETUP_PIN( L0_STEP_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( L0_DIR_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( L0_ENABLE_PIN, PIN_TYPE_OUTPUT);
-    SETUP_PIN( LASER_0_PRES, PIN_TYPE_INPUT);
+    //SETUP_PIN( LASER_0_PRES, PIN_TYPE_INPUT);
     SETUP_PIN( LASER_0_MON, PIN_TYPE_INPUT);
 
     SETUP_PIN( LASER_1_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( L1_STEP_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( L1_DIR_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( L1_ENABLE_PIN, PIN_TYPE_OUTPUT);
-    SETUP_PIN( LASER_1_PRES, PIN_TYPE_INPUT);
+    //SETUP_PIN( LASER_1_PRES, PIN_TYPE_INPUT);
     SETUP_PIN( LASER_1_MON, PIN_TYPE_INPUT);
 
     SETUP_PIN( TABLE0_DETECTED_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( TABLE0_STEP_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( TABLE0_DIR_PIN, PIN_TYPE_OUTPUT);
     SETUP_PIN( TABLE0_ENABLE_PIN, PIN_TYPE_OUTPUT);
-    
+
     // set 0
-    
+
     WRITE_VPIN( LASER_0_PIN, 0);
     WRITE_VPIN( L0_STEP_PIN, 0);
     WRITE_VPIN( L0_DIR_PIN, 0);
@@ -333,7 +333,7 @@ void init_scanner()
     WRITE_VPIN( TABLE0_STEP_PIN, 0);
     WRITE_VPIN( TABLE0_DIR_PIN, 0);
     WRITE_VPIN( TABLE0_ENABLE_PIN, 0);
-  
+
 }
 
 /***********************************************************************
@@ -350,6 +350,7 @@ void pin_x_steps( int PIN , int steps )
         delay(3);
         WRITE_VPIN( PIN, HIGH);
         delay(3);
+        HAL::pingWatchdog();
     }
 }
 
@@ -451,10 +452,10 @@ byte is_box_open()
 
 byte laser_detected( uint8_t laser_id )
 {
-	
-	// @todo
-	
-	return 1;
+
+    // @todo
+
+    return 1;
     byte detection = false;
     switch ( laser_id )
     {
@@ -577,16 +578,16 @@ void check_all_ATU()
 
 void reset_slaves()
 {
-	WRITE( RESET_SLAVES, LOW );
-	delay(100);
-	WRITE( RESET_SLAVES, HIGH );
-	HAL::pingWatchdog();
-	for ( uint8_t i = 1; i<NUM_BOARD ; ++i)
-	{
-		boards[i].connected = false;
-		boards[i].check_state = BOARD_W8_MASTER;
-	}
-	delay(100);
+    WRITE( RESET_SLAVES, LOW );
+    delay(100);
+    WRITE( RESET_SLAVES, HIGH );
+    HAL::pingWatchdog();
+    for ( uint8_t i = 1; i<NUM_BOARD ; ++i)
+    {
+        boards[i].connected = false;
+        boards[i].check_state = BOARD_W8_MASTER;
+    }
+    delay(100);
 }
 
 void check_boards_connected()

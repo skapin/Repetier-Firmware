@@ -534,14 +534,14 @@ STEPPER_CURRENT_CONTROL
 #define L0_STEP_PIN         46
 #define L0_DIR_PIN          50
 #define L0_ENABLE_PIN       48
-#define LASER_0_PRES        (0 +PINS_PER_BOARD*ID_BOARD_SC)
+#define LASER_0_PRES        -1//(0 +PINS_PER_BOARD*ID_BOARD_SC)
 #define LASER_0_MON         (14+PIN_ANALOG +PINS_PER_BOARD*ID_BOARD_SC)
 
 #define LASER_1_PIN         (3+PINS_PER_BOARD*ID_BOARD_SC)
 #define L1_STEP_PIN         40
 #define L1_DIR_PIN          47
 #define L1_ENABLE_PIN       49
-#define LASER_1_PRES        (1 +PINS_PER_BOARD*ID_BOARD_SC)
+#define LASER_1_PRES        -1//(1 +PINS_PER_BOARD*ID_BOARD_SC)
 #define LASER_1_MON         (15+PIN_ANALOG +PINS_PER_BOARD*ID_BOARD_SC)
 
 #define TABLE0_DETECTED_PIN (32 +PINS_PER_BOARD*1)

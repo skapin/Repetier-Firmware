@@ -68,16 +68,22 @@ void eps_manage()
             }
             if ( get_flag )
             {
-                eps_send_action( i2c_current_board+1, EPS_GET );
+          /*      eps_send_action( i2c_current_board+1, EPS_GET );
                 Wire.requestFrom(i2c_current_board+1,32);
-                eps_process_incoming_datas( i2c_current_board );
+                eps_process_incoming_datas( i2c_current_board );*/
             }
             if ( token_flag )
             {
                 eps_send_action( i2c_current_board+1, EPS_TOKEN );
                 HAL::pingWatchdog();
-                Wire.requestFrom(i2c_current_board+1,32);
-                eps_process_incoming_datas( i2c_current_board );
+                if ( Wire.requestFrom(i2c_current_board+1,32) )
+                {
+                    eps_process_incoming_datas( i2c_current_board );
+                }
+                else
+                {
+                    Com::printFLN(Com::tError, " I2C:requestFrom " );
+                }
             }
             if ( pong_flag )
             {
@@ -109,6 +115,7 @@ void eps_process_incoming_datas(uint8_t board)
     byte pin = 0;
     int value = 0;
     byte action = 0;
+
     while ( Wire.available() )
     {
         action = Wire.I2C_READ_FUNC();
@@ -128,6 +135,12 @@ void eps_process_incoming_datas(uint8_t board)
         {
             boards[board].connected = false;
             boards[board].check_state = BOARD_W8_MASTER;
+        }
+        else if ( action == EPS_SET_END )
+        {
+        }
+        else
+        {
         }
     }
 }

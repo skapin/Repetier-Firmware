@@ -62,6 +62,10 @@ To override EEPROM settings with config settings, set EEPROM_MODE 0
 
 #define CRITICAL_MIN_RAM_VALUE          250
 
+#define STEP_PER_MM_RX                  100
+#define STEP_PER_MM_RY                  100
+#define STEP_PER_MM_RZ                  100
+
 /**  Sensor used by thermistor inside the heating chamber (cf. extruder.h for generic table)*/
 #define HOT_CHAMBER_SENSOR_TYPE         1
 
@@ -1581,9 +1585,9 @@ Values must be in range 1..255
 
 #define NUM_MOTOR_DRIVERS 6
 // #define MOTOR_DRIVER_x StepperDriver<int stepPin, int dirPin, int enablePin,bool invertDir, bool invertEnable>(float stepsPerMM,float speed)
-#define MOTOR_DRIVER_1(var) StepperDriver<7,34,36,0,1> var(100,10)
-#define MOTOR_DRIVER_2(var) StepperDriver<6,38,40,0,1> var(100,10)
-#define MOTOR_DRIVER_3(var) StepperDriver<10,29,27,0,1> var(100,10)
+#define MOTOR_DRIVER_1(var) StepperDriver<7,34,36,0,1> var(STEP_PER_MM_RX,10)
+#define MOTOR_DRIVER_2(var) StepperDriver<6,38,40,0,1> var(STEP_PER_MM_RY,10)
+#define MOTOR_DRIVER_3(var) StepperDriver<10,29,27,0,1> var(STEP_PER_MM_RZ,10)
 #define MOTOR_DRIVER_4(var) StepperDriver<46,50,48,0,1> var(100,10)
 #define MOTOR_DRIVER_5(var) StepperDriver<40,47,49,0,1> var(100,10)
 #define MOTOR_DRIVER_6(var) StepperDriver<45,42,43,0,1> var(100,10)
