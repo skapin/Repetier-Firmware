@@ -365,12 +365,18 @@ void manage_pwm()
  #if ENABLE_ARCH_PWM == true
 #if defined(EXT0_HEATER_PIN) &&  EXT0_HEATER_PIN>-1 && NUM_EXTRUDER>1
         WRITE_VPIN(EXT0_HEATER_PIN, pwm_pos[0]);
+#if defined(EXT0_HEATER_PIN_X2) &&  EXT0_HEATER_PIN_X2>-1 && NUM_EXTRUDER>1
+        WRITE_VPIN(EXT0_HEATER_PIN_X2, pwm_pos[0]);
+#endif
 #if EXT0_EXTRUDER_COOLER_PIN>-1
         WRITE_VPIN(EXT0_EXTRUDER_COOLER_PIN, extruder[0].coolerPWM);
 #endif
 #endif
 #if defined(EXT1_HEATER_PIN) &&  EXT1_HEATER_PIN>-1
         WRITE_VPIN(EXT1_HEATER_PIN, pwm_pos[1]);
+#if defined(EXT1_HEATER_PIN_X2) &&  EXT1_HEATER_PIN_X2>-1
+        WRITE_VPIN(EXT1_HEATER_PIN_X2, pwm_pos[1]);
+#endif
 #if EXT1_EXTRUDER_COOLER_PIN>-1
         WRITE_VPIN(EXT1_EXTRUDER_COOLER_PIN, extruder[1].coolerPWM);
 #endif

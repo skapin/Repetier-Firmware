@@ -178,11 +178,11 @@ void HAL::analogStart(void)
   ADC->ADC_WPMR = 0x41444300u; //ADC_WPMR_WPKEY(0);
   pmc_enable_periph_clk(ID_ADC);  // enable adc clock
 
-	//adc_enable_channel( ADC, (adc_channel_num_t)ADC0  );
-	/*adc_enable_channel( ADC, (adc_channel_num_t)ADC7  );
-	adc_enable_channel( ADC, (adc_channel_num_t)ADC13  );
-	adc_enable_channel( ADC, (adc_channel_num_t)ADC4  );*/
-	
+    //adc_enable_channel( ADC, (adc_channel_num_t)ADC0  );
+    /*adc_enable_channel( ADC, (adc_channel_num_t)ADC7  );
+    adc_enable_channel( ADC, (adc_channel_num_t)ADC13  );
+    adc_enable_channel( ADC, (adc_channel_num_t)ADC4  );*/
+
   for (int i = 0; i < ANALOG_INPUTS; i++)
   {
     osAnalogInputValues[i] = 0;
@@ -930,10 +930,23 @@ void PWM_TIMER_VECTOR ()
   if (pwm_count_heater == 0 && !PDM_FOR_EXTRUDER)
   {
 #if defined(EXT0_HEATER_PIN) && EXT0_HEATER_PIN > -1
-    if ((pwm_pos_set[0] = (pwm_pos[0] & HEATER_PWM_MASK)) > 0) WRITE(EXT0_HEATER_PIN, !HEATER_PINS_INVERTED);
+    if ((pwm_pos_set[0] = (pwm_pos[0] & HEATER_PWM_MASK)) > 0)
+    {
+        WRITE(EXT0_HEATER_PIN, !HEATER_PINS_INVERTED);
+        #if defined(EXT0_HEATER_PIN_X2) && EXT0_HEATER_PIN_X2 > -1
+            WRITE(EXT0_HEATER_PIN_X2, !HEATER_PINS_INVERTED);
+        #endif
+        }
 #endif
 #if defined(EXT1_HEATER_PIN) && EXT1_HEATER_PIN > -1 && NUM_EXTRUDER > 1
-    if ((pwm_pos_set[1] = (pwm_pos[1] & HEATER_PWM_MASK)) > 0) WRITE(EXT1_HEATER_PIN, !HEATER_PINS_INVERTED);
+    if ((pwm_pos_set[1] = (pwm_pos[1] & HEATER_PWM_MASK)) > 0)
+    {
+        WRITE(EXT1_HEATER_PIN, !HEATER_PINS_INVERTED);
+        #if defined(EXT1_HEATER_PIN_X2) && EXT1_HEATER_PIN_X2 > -1
+            WRITE(EXT1_HEATER_PIN_X2, !HEATER_PINS_INVERTED);
+        #endif
+
+    }
 #endif
 #if defined(EXT2_HEATER_PIN) && EXT2_HEATER_PIN > -1 && NUM_EXTRUDER > 2
     if ((pwm_pos_set[2] = (pwm_pos[2] & HEATER_PWM_MASK)) > 0) WRITE(EXT2_HEATER_PIN, !HEATER_PINS_INVERTED);
@@ -991,8 +1004,17 @@ void PWM_TIMER_VECTOR ()
 #if defined(EXT0_HEATER_PIN) && EXT0_HEATER_PIN > -1
 #if PDM_FOR_EXTRUDER
   pulseDensityModulate(EXT0_HEATER_PIN, pwm_pos[0], pwm_pos_set[0], HEATER_PINS_INVERTED);
+  #if defined(EXT0_HEATER_PIN_X2) && EXT0_HEATER_PIN_X2 > -1
+    pulseDensityModulate(EXT0_HEATER_PIN_X2, pwm_pos[0], pwm_pos_set[0], HEATER_PINS_INVERTED);
+  #endif
 #else
-  if (pwm_pos_set[0] == pwm_count_heater && pwm_pos_set[0] != HEATER_PWM_MASK) WRITE(EXT0_HEATER_PIN, HEATER_PINS_INVERTED);
+  if (pwm_pos_set[0] == pwm_count_heater && pwm_pos_set[0] != HEATER_PWM_MASK)
+  {
+      WRITE(EXT0_HEATER_PIN, HEATER_PINS_INVERTED);
+      #if defined(EXT0_HEATER_PIN_X2) && EXT0_HEATER_PIN_X2 > -1
+        WRITE(EXT0_HEATER_PIN_X2, HEATER_PINS_INVERTED);
+      #endif
+  }
 #endif
 #if EXT0_EXTRUDER_COOLER_PIN > -1
 #if PDM_FOR_COOLER
@@ -1005,8 +1027,17 @@ void PWM_TIMER_VECTOR ()
 #if defined(EXT1_HEATER_PIN) && EXT1_HEATER_PIN > -1 && NUM_EXTRUDER > 1
 #if PDM_FOR_EXTRUDER
   pulseDensityModulate(EXT1_HEATER_PIN, pwm_pos[1], pwm_pos_set[1], HEATER_PINS_INVERTED);
+  #if defined(EXT1_HEATER_PIN_X2) && EXT1_HEATER_PIN_X2 > -1
+    pulseDensityModulate(EXT1_HEATER_PIN_X2, pwm_pos[1], pwm_pos_set[1], HEATER_PINS_INVERTED);
+  #endif
 #else
-  if (pwm_pos_set[1] == pwm_count_heater && pwm_pos_set[1] != HEATER_PWM_MASK) WRITE(EXT1_HEATER_PIN, HEATER_PINS_INVERTED);
+  if (pwm_pos_set[1] == pwm_count_heater && pwm_pos_set[1] != HEATER_PWM_MASK)
+  {
+      WRITE(EXT1_HEATER_PIN, HEATER_PINS_INVERTED);
+      #if defined(EXT1_HEATER_PIN_X2) && EXT1_HEATER_PIN_X2 > -1
+        WRITE(EXT1_HEATER_PIN_X2, HEATER_PINS_INVERTED);
+      #endif
+  }
 #endif
 #if !SHARED_COOLER && defined(EXT1_EXTRUDER_COOLER_PIN) && EXT1_EXTRUDER_COOLER_PIN > -1 && EXT1_EXTRUDER_COOLER_PIN != EXT0_EXTRUDER_COOLER_PIN
 #if PDM_FOR_COOLER

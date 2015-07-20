@@ -302,7 +302,8 @@ Overridden if EEPROM activated.*/
 // Analog input pin for reading temperatures or pin enabling SS for MAX6675
 #define EXT0_TEMPSENSOR_PIN TEMP_0_PIN
 // Which pin enables the heater
-#define EXT0_HEATER_PIN HEATER_0_PIN
+#define EXT0_HEATER_PIN    HEATER_BUSE_0_0 //HEATER_0_PIN
+#define EXT0_HEATER_PIN_X2 HEATER_BUSE_0_1 //HEATER_0_PIN
 #define EXT0_STEP_PIN E0_STEP_PIN
 #define EXT0_DIR_PIN E0_DIR_PIN
 // set to false/true for normal / inverse direction
@@ -424,7 +425,8 @@ The codes are only executed for multiple extruder when changing the extruder. */
 // Analog input pin for reading temperatures or pin enabling SS for MAX6675
 #define EXT1_TEMPSENSOR_PIN TEMP_2_PIN
 // Which pin enables the heater
-#define EXT1_HEATER_PIN HEATER_2_PIN
+#define EXT1_HEATER_PIN HEATER_BUSE_1_0 //HEATER_2_PIN
+#define EXT1_HEATER_PIN_X2 HEATER_BUSE_1_1
 #define EXT1_STEP_PIN E1_STEP_PIN
 #define EXT1_DIR_PIN E1_DIR_PIN
 // set to false/true for normal/inverse direction

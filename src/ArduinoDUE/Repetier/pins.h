@@ -448,6 +448,12 @@ STEPPER_CURRENT_CONTROL
 #define HEATER_BED_2        (46 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 #define HEATER_BED_3        (44 +PINS_PER_BOARD*ID_BOARD_PRINTER)
 
+#define HEATER_BUSE_0_0     (12 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+#define HEATER_BUSE_0_1     (9 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+#define HEATER_BUSE_1_0     (7 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+#define HEATER_BUSE_1_1     (6 +PINS_PER_BOARD*ID_BOARD_PRINTER)
+
+
 #define HEATER_BED_0_SENSOR ADC13//(11 +PIN_ANALOG)
 #define HEATER_BED_1_SENSOR ADC13//(12 +PIN_ANALOG)
 #define HEATER_BED_2_SENSOR ADC13//(13 +PIN_ANALOG)
@@ -700,14 +706,14 @@ STEPPER_CURRENT_CONTROL
 #define ORIG_E1_ENABLE_PIN       41
 
 // Note that on the Due pin A0 on the board is channel 2 on the ARM chip
-#define HEATER_0_PIN            10  // extruder 0
+//#define HEATER_0_PIN            HEATER_BUSE_0_0  // extruder 0
 #define TEMP_0_PIN              THERM_B0
 //THERM_B0  // Due analog pin #
 
 #define HEATER_1_PIN            HEATER_BED_0   // bed
 #define TEMP_1_PIN              HEATER_BED_0_SENSOR
 
-#define HEATER_2_PIN            9   // extruder 1
+//#define HEATER_2_PIN            HEATER_BUSE_1_0   // extruder 1
 #define TEMP_2_PIN              THERM_B1//THERM_B1
 //THERM_B1  // Due analog pin #
 
@@ -1115,6 +1121,6 @@ STEPPER_CURRENT_CONTROL
 #define SDCARDDETECT ORIG_SDCARDDETECT
 
 #define SENSITIVE_PINS {0, 1, X_STEP_PIN, X_DIR_PIN, X_ENABLE_PIN, X_MIN_PIN, X_MAX_PIN, Y_STEP_PIN, Y_DIR_PIN, Y_ENABLE_PIN, Y_MIN_PIN, Y_MAX_PIN, Z_STEP_PIN, Z_DIR_PIN, Z_ENABLE_PIN, Z_MIN_PIN, Z_MAX_PIN, LED_PIN, ORIG_PS_ON_PIN, \
-                        HEATER_0_PIN, HEATER_1_PIN, FAN_PIN, E0_PINS E1_PINS E2_PINS TEMP_0_PIN, TEMP_1_PIN,SDSS }
+                        HEATER_BUSE_0_0, HEATER_1_PIN, FAN_PIN, E0_PINS E1_PINS E2_PINS TEMP_0_PIN, TEMP_1_PIN,SDSS }
 #endif
 
