@@ -394,7 +394,8 @@ public:
     static void disableAllHeater();
     static void initExtruder();
     static void initHeatedBed();
-    static void setHeatedBedTemperature(float temp_celsius,bool beep = false);
+    static void setHeatedBedTemperature(float temp_celsius, bool beep = false);
+    static void setHeatedBedTemperatureById(float temp_celsius, uint8_t bed_id, bool beep);
     static float getHeatedBedTemperature();
     static void setTemperatureForExtruder(float temp_celsius,uint8_t extr,bool beep = false,bool wait = false);
     static void pauseExtruders();
@@ -402,8 +403,8 @@ public:
 };
 
 #if HAVE_HEATED_BED
-#define NUM_TEMPERATURE_LOOPS NUM_EXTRUDER+1
-extern TemperatureController heatedBedController;
+#define NUM_TEMPERATURE_LOOPS NUM_EXTRUDER+HEATED_BED_NUM
+extern TemperatureController heatedBedController[HEATED_BED_NUM];
 #else
 #define NUM_TEMPERATURE_LOOPS NUM_EXTRUDER
 #endif

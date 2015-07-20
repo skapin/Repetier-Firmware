@@ -415,9 +415,10 @@ void Printer::kill(uint8_t only_steppers)
     }
     else UI_STATUS_UPD(UI_TEXT_STEPPER_DISABLED);
 #if FAN_BOARD_PIN>-1
-#if HAVE_HEATED_BED
+/* @todo
+ * #if HAVE_HEATED_BED
     if(heatedBedController.targetTemperatureC < 15)      // turn off FAN_BOARD only if bed heater is off
-#endif
+#endif*/
        pwm_pos[NUM_EXTRUDER + 1] = 0;
 #endif // FAN_BOARD_PIN
 }

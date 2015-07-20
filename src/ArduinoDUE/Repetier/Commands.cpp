@@ -172,13 +172,13 @@ void Commands::printTemperatures(bool showRaw)
     Com::printF(Com::tSpaceSlash,Extruder::current->tempControl.targetTemperatureC,0);
 #if HAVE_HEATED_BED
     Com::printF(Com::tSpaceBColon,Extruder::getHeatedBedTemperature());
-    Com::printF(Com::tSpaceSlash,heatedBedController.targetTemperatureC,0);
+    Com::printF(Com::tSpaceSlash,heatedBedController[0].targetTemperatureC,0);
     if(showRaw)
     {
         Com::printF(Com::tSpaceRaw,(int)NUM_EXTRUDER);
-        Com::printF(Com::tColon,(1023 << (2 - ANALOG_REDUCE_BITS)) - heatedBedController.currentTemperature);
+        Com::printF(Com::tColon,(1023 << (2 - ANALOG_REDUCE_BITS)) - heatedBedController[0].currentTemperature);
     }
-    Com::printF(Com::tSpaceBAtColon,(pwm_pos[heatedBedController.pwmIndex])); // Show output of autotune when tuning!
+    Com::printF(Com::tSpaceBAtColon,(pwm_pos[heatedBedController[0].pwmIndex])); // Show output of autotune when tuning!
 #endif
 #endif
 #if TEMP_PID
@@ -1658,11 +1658,11 @@ void Commands::processMCode(GCode *com)
 #if HAVE_HEATED_BED
         if (com->hasS()) Extruder::setHeatedBedTemperature(com->S,com->hasF() && com->F > 0);
 #if defined(SKIP_M190_IF_WITHIN) && SKIP_M190_IF_WITHIN > 0
-        if(abs(heatedBedController.currentTemperatureC - heatedBedController.targetTemperatureC) < SKIP_M190_IF_WITHIN) break;
+        if(abs(heatedBedController[0].currentTemperatureC - heatedBedController[0].targetTemperatureC) < SKIP_M190_IF_WITHIN) break;
 #endif
         EVENT_WAITING_HEATER(-1);
         codenum = HAL::timeInMilliseconds();
-        while(heatedBedController.currentTemperatureC + 0.5 < heatedBedController.targetTemperatureC && heatedBedController.targetTemperatureC > 25.0)
+        while(heatedBedController[0].currentTemperatureC + 0.5 < heatedBedController[0].targetTemperatureC && heatedBedController[0].targetTemperatureC > 25.0)
         {
             if( (HAL::timeInMilliseconds() - codenum) > 1000 )   //Print Temp Reading every 1 second while heating up.
             {
@@ -1814,7 +1814,7 @@ void Commands::processMCode(GCode *com)
             if(com->S<0) break;
             if(com->S<NUM_EXTRUDER) temp = &extruder[com->S].tempControl;
 #if HAVE_HEATED_BED
-            else temp = &heatedBedController;
+            else temp = &heatedBedController[0];
 #else
             else break;
 #endif
