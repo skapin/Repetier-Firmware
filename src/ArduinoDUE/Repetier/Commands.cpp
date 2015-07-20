@@ -73,8 +73,8 @@ void Commands::checkForPeriodicalActions(bool allowNewMoves)
     EVENT_PERIODICAL;
     if(!executePeriodical) return;
     executePeriodical = 0;
-    EVENT_TIMER_100MS;
     Extruder::manageTemperatures();
+    EVENT_TIMER_100MS;
     if(--counter250ms == 0)
     {
         if(manageMonitor)
