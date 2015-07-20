@@ -62,7 +62,7 @@ class Heater
     float tempIStateLimitMin;
     uint8_t tempPointer;
     float tempArray[4];
-    //uint8_t pin;
+    uint8_t pin;
 #endif
 
     Heater( ){};
@@ -106,7 +106,7 @@ class Heater
         this->tempArray[2] = 0;
         this->tempArray[3] = 0;
         #endif
-       // this->pin = -1;
+        this->pin = -1;
     };
 
     ~Heater(){}

@@ -1,6 +1,6 @@
 #include "Polybox.h"
 #include "Repetier.h"
-//#include "ChamberTempController.h"
+#include "ChamberTempController.h"
 
 /***********************************************************************
  *
@@ -18,7 +18,7 @@ volatile uint8_t i2c_update_time = BOARD_UPDATE_CHECK_DELAY;
 
 volatile uint8_t polybox_mode = MODE_PRINTER_ON;
 
-//ChamberTempController chamber;
+ChamberTempController chamber;
 Table table;
 
 

@@ -2249,8 +2249,8 @@ void Commands::processMCode(GCode *com)
 /* ___________________PRINTER_______________________ */
     case 660: // printer ATU (heaters)
     {
-        // @TO_TEST Com::printPolybox( com->M );
-        // @TO_TEST Com::printFLN(Com::tSpace, chamber.isHeaterDisabled() );
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, chamber.isHeaterDisabled() );
     }
     break;
     case 661: // set printer ATU
@@ -2259,11 +2259,11 @@ void Commands::processMCode(GCode *com)
         {
             if ( com->S )
             {
-                // @TO_TEST chamber.disableHeaters();
+                chamber.disableHeaters();
             }
             else
             {
-                // @TO_TEST chamber.enableHeaters();
+                chamber.enableHeaters();
             }
         }
     }
@@ -2312,7 +2312,7 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() && com->hasP() )
         {
-            // @TO_TEST chamber.setFanByMask( com->P, com->S );
+            chamber.setFanByMask( com->P, com->S );
         }
     }
     break;
@@ -2328,7 +2328,7 @@ void Commands::processMCode(GCode *com)
                 {
                     if ( com->P & (1<< i) ) // mask.  p=1101  => bed 3 on, bed 2 one, bed 1 off bed 0 on
                     {
-                        // @TO_TEST Extruder::setHeatedBedTemperatureById( com->S, i, false );
+                        Extruder::setHeatedBedTemperatureById( com->S, i, false );
                     }
                 }
             }
@@ -2365,14 +2365,14 @@ void Commands::processMCode(GCode *com)
                     printTemperatures();
                     codenum = HAL::timeInMilliseconds();
                 }
-                        // @TO_TEST  Commands::checkForPeriodicalActions();
+                        Commands::checkForPeriodicalActions( false );
                 // are temps reached for each bed ?
                 heating = false;
                 for (uint8_t i = 0; i < HEATED_BED_NUM ; ++i )
                 {
                     if ( com->P & (1<< i) ) // mask.  p=1101  => bed 3 on, bed 2 one, bed 1 off bed 0 on
                     {
-                        // @TO_TEST if ( ! (heatedBedController[i].currentTemperatureC+0.5<heatedBedController[com->P].targetTemperatureC) )
+                         if ( ! (heatedBedController[i].currentTemperatureC+0.5<heatedBedController[com->P].targetTemperatureC) )
                             heating = true ; // keep heating cause this bed didnt reach the target temp
                     }
                 }
@@ -2385,21 +2385,21 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() )
         {
-            // @TO_TEST chamber.setAllFanPercent( com->S );
+            chamber.setAllFanPercent( com->S );
         }
     }
     break;
     case 673: //get chamber temp  ///
     {
-        // @TO_TEST Com::printPolybox( com->M );
-        // @TO_TEST Com::printFLN(Com::tSpaceT0Colon,chamber.getCurrentTemp() );
+         Com::printPolybox( com->M );
+         Com::printFLN(Com::tSpaceT0Colon,chamber.getCurrentTemp() );
     }
     break;
     case 675: // set chamber temp (fast =no wait)
     {
         if ( com->hasS() )
         {
-            // @TO_TEST chamber.setTargetTemperature( com->S );
+            chamber.setTargetTemperature( com->S );
         }
     }
     break;
@@ -2413,11 +2413,11 @@ void Commands::processMCode(GCode *com)
     break;*/
     case 677: //get chamber temp (all)
     {
-        /* @TO_TEST Com::printPolybox( com->M );
+        Com::printPolybox( com->M );
         Com::printF(Com::tSpaceAColon,chamber.getCurrentTempById(0) );
         Com::printF(Com::tSpaceBColon,chamber.getCurrentTempById(1) );
         Com::printFLN(Com::tSpaceCColon,chamber.getCurrentTempById(2) );
-        */
+
     }
     break;
     case 678: //get bed temp (all)
@@ -2478,8 +2478,8 @@ void Commands::processMCode(GCode *com)
     break;
     case 686: // temp around board
     {
-        //Com::printPolybox( com->M );
-        // @TO_TEST Com::printFLN(Com::tSpaceT0Colon, chamber.getCurrentICTemp() );
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpaceT0Colon, chamber.getCurrentICTemp() );
     }
     break;
     case 687: // power status
