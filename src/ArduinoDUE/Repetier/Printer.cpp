@@ -168,6 +168,10 @@ void Endstops::update() {
         if(READ(X_MIN_PIN) != ENDSTOP_X_MIN_INVERTING)
             newRead |= ENDSTOP_X_MIN_ID;
 #endif
+#if (X_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_X
+        if(READ(X_HOME_PIN) != ENDSTOP_X_HOME_INVERTING)
+            newRead |= ENDSTOP_X_HOME_ID;
+#endif
 #if (X_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_X
         if(READ(X_MAX_PIN) != ENDSTOP_X_MAX_INVERTING)
             newRead |= ENDSTOP_X_MAX_ID;
@@ -176,6 +180,10 @@ void Endstops::update() {
         if(READ(Y_MIN_PIN) != ENDSTOP_Y_MIN_INVERTING)
             newRead |= ENDSTOP_Y_MIN_ID;
 #endif
+#if (Y_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Y
+        if(READ(Y_HOME_PIN) != ENDSTOP_Y_HOME_INVERTING)
+            newRead |= ENDSTOP_Y_HOME_ID;
+#endif
 #if (Y_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_Y
         if(READ(Y_MAX_PIN) != ENDSTOP_Y_MAX_INVERTING)
             newRead |= ENDSTOP_Y_MAX_ID;
@@ -183,6 +191,10 @@ void Endstops::update() {
 #if (Z_MIN_PIN > -1) && MIN_HARDWARE_ENDSTOP_Z
         if(READ(Z_MIN_PIN) != ENDSTOP_Z_MIN_INVERTING)
             newRead |= ENDSTOP_Z_MIN_ID;
+#endif
+#if (Z_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Z
+        if(READ(Z_HOME_PIN) != ENDSTOP_Z_HOME_INVERTING)
+            newRead |= ENDSTOP_Z_HOME_ID;
 #endif
 #if (Z_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_Z
         if(READ(Z_MAX_PIN) != ENDSTOP_Z_MAX_INVERTING)
@@ -205,6 +217,10 @@ void Endstops::report() {
         Com::printF(Com::tXMinColon);
         Com::printF(xMin() ? Com::tHSpace : Com::tLSpace);
 #endif
+#if (X_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_X
+        Com::printF(Com::tXHomeColon);
+        Com::printF(xHome() ? Com::tHSpace : Com::tLSpace);
+#endif
 #if (X_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_X
         Com::printF(Com::tXMaxColon);
         Com::printF(xMax() ? Com::tHSpace : Com::tLSpace);
@@ -213,6 +229,10 @@ void Endstops::report() {
         Com::printF(Com::tYMinColon);
         Com::printF(yMin() ? Com::tHSpace : Com::tLSpace);
 #endif
+#if (Y_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Y
+        Com::printF(Com::tYHomeColon);
+        Com::printF(yHome() ? Com::tHSpace : Com::tLSpace);
+#endif
 #if (Y_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_Y
         Com::printF(Com::tYMaxColon);
         Com::printF(yMax() ? Com::tHSpace : Com::tLSpace);
@@ -220,6 +240,10 @@ void Endstops::report() {
 #if (Z_MIN_PIN > -1) && MIN_HARDWARE_ENDSTOP_Z
         Com::printF(Com::tZMinColon);
         Com::printF(zMin() ? Com::tHSpace : Com::tLSpace);
+#endif
+#if (Z_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Z
+        Com::printF(Com::tZHomeColon);
+        Com::printF(zHome() ? Com::tHSpace : Com::tLSpace);
 #endif
 #if (Z_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_Z
         Com::printF(Com::tZMaxColon);
@@ -790,6 +814,39 @@ void Printer::setup()
 #error You have defined hardware z min endstop without pin assignment. Set pin number for Z_MIN_PIN
 #endif
 #endif
+// - home
+   //endstop pullups
+#if HOME_HARDWARE_ENDSTOP_X
+#if X_HOME_PIN > -1
+    SET_INPUT(X_HOME_PIN);
+#if ENDSTOP_PULLUP_X_HOME
+    PULLUP(X_HOME_PIN, HIGH);
+#endif
+#else
+#error You have defined hardware x home endstop without pin assignment. Set pin number for X_HOME_PIN
+#endif
+#endif
+#if HOME_HARDWARE_ENDSTOP_Y
+#if Y_HOME_PIN > -1
+    SET_INPUT(Y_HOME_PIN);
+#if ENDSTOP_PULLUP_Y_HOME
+    PULLUP(Y_HOME_PIN, HIGH);
+#endif
+#else
+#error You have defined hardware y home endstop without pin assignment. Set pin number for Y_HOME_PIN
+#endif
+#endif
+#if HOME_HARDWARE_ENDSTOP_Z
+#if Z_HOME_PIN > -1
+    SET_INPUT(Z_HOME_PIN);
+#if ENDSTOP_PULLUP_Z_HOME
+    PULLUP(Z_HOME_PIN, HIGH);
+#endif
+#else
+#error You have defined hardware z home endstop without pin assignment. Set pin number for Z_HOME_PIN
+#endif
+#endif
+// - max
 #if MAX_HARDWARE_ENDSTOP_X
 #if X_MAX_PIN > -1
     SET_INPUT(X_MAX_PIN);

@@ -2027,6 +2027,12 @@ void Commands::processMCode(GCode *com)
         Com::printFLN(Com::tSpace, READ_VPIN(CN_STATE_LUB) );
     }
     break;
+    case 618: // Get Z-Contact state
+    {
+        Com::printPolybox( com->M );
+        Com::printFLN(Com::tSpace, READ_VPIN(CONTACT_POINT_A) );
+    }
+    break;
 /* ___________________SCANNER_______________________ */
     case 620:    //get scanner status
     {

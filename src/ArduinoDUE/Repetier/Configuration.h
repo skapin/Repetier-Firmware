@@ -1321,7 +1321,7 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 /* Z-Probing */
 
 #define FEATURE_Z_PROBE true
-#define Z_PROBE_PIN 60  // 63
+#define Z_PROBE_PIN CONTACT_POINT_A  // 63
 #define Z_PROBE_PULLUP 1
 #define Z_PROBE_ON_HIGH 1
 #define Z_PROBE_X_OFFSET 0
@@ -1330,7 +1330,7 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 
 // Waits for a signal to start. Valid signals are probe hit and ok button.
 // This is needful if you have the probe trigger by hand.
-#define Z_PROBE_WAIT_BEFORE_TEST 1
+#define Z_PROBE_WAIT_BEFORE_TEST 0
 /** Speed of z-axis in mm/s when probing */
 #define Z_PROBE_SPEED 10
 #define Z_PROBE_XY_SPEED 150

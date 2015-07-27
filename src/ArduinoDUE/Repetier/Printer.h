@@ -146,13 +146,16 @@ private:
 #endif //DISTORTION_CORRECTION
 
 #define ENDSTOP_X_MIN_ID 1
-#define ENDSTOP_X_MAX_ID 2
-#define ENDSTOP_Y_MIN_ID 4
-#define ENDSTOP_Y_MAX_ID 8
-#define ENDSTOP_Z_MIN_ID 16
-#define ENDSTOP_Z_MAX_ID 32
-#define ENDSTOP_Z2_MINMAX_ID 64
-#define ENDSTOP_Z_PROBE_ID 128
+#define ENDSTOP_X_HOME_ID 2
+#define ENDSTOP_X_MAX_ID 4
+#define ENDSTOP_Y_MIN_ID 8
+#define ENDSTOP_Y_HOME_ID 16
+#define ENDSTOP_Y_MAX_ID 32
+#define ENDSTOP_Z_MIN_ID 64
+#define ENDSTOP_Z_HOME_ID 128
+#define ENDSTOP_Z_MAX_ID 256
+#define ENDSTOP_Z2_MINMAX_ID 512
+#define ENDSTOP_Z_PROBE_ID 1024
 
 class Endstops {
     static flag8_t lastState;
@@ -166,6 +169,13 @@ public:
     static INLINE bool xMin() {
 #if (X_MIN_PIN > -1) && MIN_HARDWARE_ENDSTOP_X
         return (lastState & ENDSTOP_X_MIN_ID) != 0;
+#else
+        return false;
+#endif
+    }
+static INLINE bool xHome() {
+#if (X_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_X
+        return (lastState & ENDSTOP_X_HOME_ID) != 0;
 #else
         return false;
 #endif
@@ -184,6 +194,13 @@ public:
         return false;
 #endif
     }
+    static INLINE bool yHome() {
+#if (Y_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Y
+        return (lastState & ENDSTOP_Y_HOME_ID) != 0;
+#else
+        return false;
+#endif
+    }
     static INLINE bool yMax() {
 #if (Y_MAX_PIN > -1) && MAX_HARDWARE_ENDSTOP_Y
         return (lastState & ENDSTOP_Y_MAX_ID) != 0;
@@ -194,6 +211,13 @@ public:
     static INLINE bool zMin() {
 #if (Z_MIN_PIN > -1) && MIN_HARDWARE_ENDSTOP_Z
         return (lastState & ENDSTOP_Z_MIN_ID) != 0;
+#else
+        return false;
+#endif
+    }
+    static INLINE bool zHome() {
+#if (Z_HOME_PIN > -1) && HOME_HARDWARE_ENDSTOP_Z
+        return (lastState & ENDSTOP_Z_HOME_ID) != 0;
 #else
         return false;
 #endif

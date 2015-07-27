@@ -493,6 +493,10 @@ STEPPER_CURRENT_CONTROL
 #define CN_LUB_LEVEL_MEDIUM (14+PIN_ANALOG +PINS_PER_BOARD*1)
 #define CN_LUB_LEVEL_HIGH   (13+PIN_ANALOG +PINS_PER_BOARD*1)
 
+#define CONTACT_POINT_A     (29+PINS_PER_BOARD*ID_BOARD_CN)  // used by Z_PROBE_PIN : Endstop::update() : Printer::
+#define CONTACT_POINT_B     (31+PINS_PER_BOARD*ID_BOARD_CN)
+#define CONTACT_POINT_C     (33+PINS_PER_BOARD*ID_BOARD_CN)
+
 /***********************************************************************
  *                    ATU / INTER
  * ********************************************************************/
