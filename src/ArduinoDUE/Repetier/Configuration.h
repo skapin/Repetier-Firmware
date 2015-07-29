@@ -64,7 +64,7 @@ To override EEPROM settings with config settings, set EEPROM_MODE 0
 
 #define STEP_PER_MM_RX                  100
 #define STEP_PER_MM_RY                  100
-#define STEP_PER_MM_RZ                  100
+#define STEP_PER_MM_RZ                  22.22 //step per degree, and not mm.
 
 /**  Sensor used by thermistor inside the heating chamber (cf. extruder.h for generic table)*/
 #define HOT_CHAMBER_SENSOR_TYPE         1

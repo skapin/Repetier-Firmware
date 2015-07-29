@@ -562,21 +562,21 @@ STEPPER_CURRENT_CONTROL
 /***********************************************************************
  *                    THERM
  * ********************************************************************/
-// -1 to desactivate
-#define THERM_BOX0          (8 +PIN_ANALOG)
-#define THERM_BOX1          (9 +PIN_ANALOG)
-#define THERM_BOX2          (10 +PIN_ANALOG)
+// -1 to desactivate (see varian.cpp : column ADC n2)
+#define THERM_BOX0          ADC10//(8 +PIN_ANALOG)
+#define THERM_BOX1          ADC11//(9 +PIN_ANALOG)
+#define THERM_BOX2          ADC12//(10 +PIN_ANALOG)
 
-#define THERM_ELEC0         (7 +PIN_ANALOG)
-#define THERM_ELEC1         (6 +PIN_ANALOG)
+#define THERM_ELEC0         ADC0//(7 +PIN_ANALOG)
+#define THERM_ELEC1         ADC1//(6 +PIN_ANALOG)
 
 #define THERM_B1            ADC4
-#define THERM_CF_B1_B       (5 +PIN_ANALOG)
-#define THERM_CF_B1_H       (4 +PIN_ANALOG)
+#define THERM_CF_B1_B       ADC2//(5 +PIN_ANALOG)
+#define THERM_CF_B1_H       ADC3//(4 +PIN_ANALOG)
 
 #define THERM_B0            ADC7
-#define THERM_CF_B0_B       (2 +PIN_ANALOG)
-#define THERM_CF_B0_H       (1 +PIN_ANALOG)
+#define THERM_CF_B0_B       ADC5//(2 +PIN_ANALOG)
+#define THERM_CF_B0_H       ADC6//(1 +PIN_ANALOG)
 
 /***********************************************************************
  *                    Fans
