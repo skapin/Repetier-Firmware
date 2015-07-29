@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/skapin/Repetier-Firmware.png?label=ready&title=Ready)](https://waffle.io/skapin/Repetier-Firmware)
 # Repetier-Firmware - the fast and user friendly firmware
 
 ## Installation
