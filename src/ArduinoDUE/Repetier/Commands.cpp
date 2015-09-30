@@ -1355,6 +1355,8 @@ void Commands::processGCode(GCode *com)
 #if defined(NUM_MOTOR_DRIVERS) && NUM_MOTOR_DRIVERS > 0
     case 201:
         commandG201(*com);
+        Com::printF("Done:G201");
+		Com::printFLN(" X:",com->X);
         break;
     case 202:
         commandG202(*com);
@@ -2067,16 +2069,26 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() && com->hasP() && com->hasX() )
         {
-            int pos = getMotorDriver(com->P)/*RZ*/->getPosition();
-            if ( com->S == 0 )
-            {
-                getMotorDriver(com->P)->gotoPosition( (pos + com->X));
-            }
-            else
-            {
-                getMotorDriver(com->P)->gotoPosition( (pos - com->X));
-            }
+			int pos = 0;
+			// relative form current position
+			if ( com->hasR() && com->R != 0) 
+			{
+				pos = getMotorDriver(com->P)/*RZ*/->getPosition();
+			}
+			// ccw or cw
+			if ( com->S == 0 )
+			{
+				getMotorDriver(com->P)->gotoPosition( (pos + com->X));
+			}
+			else
+			{
+				getMotorDriver(com->P)->gotoPosition( (pos - com->X));
+			}
+            Com::printF("Done:M625");
+            //Com::printF("v:",getMotorDriver(com->P)/*RZ*/->getPosition());
+			Com::printFLN(" X:",com->X);
         }
+        
     }
     break;
     case 627:    // Set Table Clock Direction (0 for CCW)
@@ -2554,6 +2566,16 @@ void Commands::processMCode(GCode *com)
     {
         Com::printPolybox( com->M );
         Com::printFLN(Com::tSpace, 1);
+    }
+    break;
+    case 697: // MCODE_GLOBAL_SET_MODE
+    {
+        if ( com->hasS() )
+        {
+            set_mode(com->S );            
+
+            Com::printFLN(" Set Mode to:", com->S);
+        }   
     }
     break;
     /* _____________________DEBUG______________________ */

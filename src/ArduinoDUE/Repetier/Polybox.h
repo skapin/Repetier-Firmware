@@ -75,6 +75,7 @@ void encoder_incr(); ///< Incremente the encoder for clogging.
 void pin_x_steps( int PIN , int steps ); ///< Move motor at PIn by the given steps.
 void executeAction(int action, int param); ///<
 void manage_mode();
+void set_mode( uint8_t mode_flag);
 bool is_printer_mode();
 void set_atu ( bool enable );
 void enable_PSU( bool enable );
