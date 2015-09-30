@@ -2576,9 +2576,8 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasP() )
         {
-            VPIN_MODE(com->P, INPUT);
             Com::printPolybox( com->M );
-            Com::printFLN(Com::tSpacePColon, READ_VPIN(com->P) );
+            Com::printFLN(Com::tSpacePColon, GET_VPIN(com->P) );
         }
     }
     break;
@@ -2586,7 +2585,7 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() && com->hasP() )
         {
-            VPIN_MODE(com->P, OUTPUT);
+            //VPIN_MODE(com->P, OUTPUT);
             WRITE_VPIN(com->P, com->S);
         }
     }
@@ -2640,6 +2639,25 @@ void Commands::processMCode(GCode *com)
         HAL::pingWatchdog();*/
         break;
     }
+    case 709: //Set Pin Output or Input
+    {
+        if ( com->hasS()  )
+        {
+            if ( com->S == OUTPUT )
+            {
+                VPIN_MODE(com->P, OUTPUT);
+                Com::printPolybox( com->M );
+                Com::printFLN( "Set Pin to Output type" );
+            }
+            else if ( com->S == INPUT )
+            {
+                VPIN_MODE(com->P, INPUT);
+                Com::printPolybox( com->M );
+                Com::printFLN( "Set Pin to Input type" );
+            }
+        }
+    }
+    break;
     case 710:
     {
         if ( com->hasF() )
