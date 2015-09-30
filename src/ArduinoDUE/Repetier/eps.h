@@ -86,6 +86,7 @@
 
 #define WRITE_VPIN( p, v) eps_set_vpin_value( p, v)
 #define READ_VPIN( p ) eps_read_vpin_value( p )
+#define GET_VPIN( p ) eps_get_vpin_value( p )
 #define READ_VPIN_MODE( p ) eps_read_vpin_type( p )
 #define VPIN_MODE( p, v) eps_write_vpin_type( p, v)
 
@@ -102,7 +103,11 @@ extern bool send_entries_flag;
 
 inline uint8_t vpin2bpin(int vpin)
 {
-    if ( vpin < (PINS_PER_BOARD*2) )
+    if ( vpin < (PINS_PER_BOARD) )
+    {
+        return vpin;
+    }
+    else if ( vpin < (PINS_PER_BOARD*2) )
     {
         vpin -= PINS_PER_BOARD;
     }
@@ -122,7 +127,11 @@ inline uint8_t vpin2bpin(int vpin)
 }
 inline uint8_t vpin2board(int16_t vpin)
 {
-    if ( vpin < (PINS_PER_BOARD*2) )
+    if ( vpin < (PINS_PER_BOARD) )
+    {
+        return 0;
+    }
+    else if ( vpin < (PINS_PER_BOARD*2) )
     {
         return 1;
     }
@@ -153,6 +162,8 @@ uint8_t board_read_bpin_type( uint8_t b, uint8_t pin );
 
 int eps_read_vpin_value( int pin );
 uint8_t eps_read_vpin_type( int pin );
+
+int eps_get_vpin_value( int pin );
 
 // WRITE
 void eps_set_vpin_value( int pin, int value);

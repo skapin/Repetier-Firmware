@@ -1356,7 +1356,7 @@ void Commands::processGCode(GCode *com)
     case 201:
         commandG201(*com);
         Com::printF("Done:G201");
-		Com::printFLN(" X:",com->X);
+        Com::printFLN(" X:",com->X);
         break;
     case 202:
         commandG202(*com);
@@ -2069,26 +2069,26 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() && com->hasP() && com->hasX() )
         {
-			int pos = 0;
-			// relative form current position
-			if ( com->hasR() && com->R != 0) 
-			{
-				pos = getMotorDriver(com->P)/*RZ*/->getPosition();
-			}
-			// ccw or cw
-			if ( com->S == 0 )
-			{
-				getMotorDriver(com->P)->gotoPosition( (pos + com->X));
-			}
-			else
-			{
-				getMotorDriver(com->P)->gotoPosition( (pos - com->X));
-			}
+            int pos = 0;
+            // relative form current position
+            if ( com->hasR() && com->R != 0)
+            {
+                pos = getMotorDriver(com->P)/*RZ*/->getPosition();
+            }
+            // ccw or cw
+            if ( com->S == 0 )
+            {
+                getMotorDriver(com->P)->gotoPosition( (pos + com->X));
+            }
+            else
+            {
+                getMotorDriver(com->P)->gotoPosition( (pos - com->X));
+            }
             Com::printF("Done:M625");
             //Com::printF("v:",getMotorDriver(com->P)/*RZ*/->getPosition());
-			Com::printFLN(" X:",com->X);
+            Com::printFLN(" X:",com->X);
         }
-        
+
     }
     break;
     case 627:    // Set Table Clock Direction (0 for CCW)
@@ -2572,10 +2572,10 @@ void Commands::processMCode(GCode *com)
     {
         if ( com->hasS() )
         {
-            set_mode(com->S );            
+            set_mode(com->S );
 
             Com::printFLN(" Set Mode to:", com->S);
-        }   
+        }
     }
     break;
     /* _____________________DEBUG______________________ */
@@ -2661,7 +2661,21 @@ void Commands::processMCode(GCode *com)
         HAL::pingWatchdog();*/
         break;
     }
-    case 709: //Set Pin Output or Input
+    case 710:
+    {
+        if ( com->hasF() )
+        {
+            Com::printPolybox( com->M );
+            com->G = com->F;
+            com->params = com->params & ~(1<<8); // disable F
+            Commands::processGCode( com);
+            //Commands::executeGCode( com );
+            Com::printFLN( Com::tNewline );
+        }
+//          Com::printFLN( Com::tNewline );
+    break;
+    }
+   case 711: //Set Pin Output or Input
     {
         if ( com->hasS()  )
         {
@@ -2680,20 +2694,25 @@ void Commands::processMCode(GCode *com)
         }
     }
     break;
-    case 710:
+    case 712: //Get Pin Output or Input
     {
-        if ( com->hasF() )
+        if ( com->hasP()  )
         {
-            Com::printPolybox( com->M );
-            com->G = com->F;
-            com->params = com->params & ~(1<<8); // disable F
-            Commands::processGCode( com);
-            //Commands::executeGCode( com );
-            Com::printFLN( Com::tNewline );
+            int type = eps_read_vpin_type(com->P);
+            if ( type == OUTPUT )
+            {
+                Com::printPolybox( com->M );
+                Com::printFLN( Com::tSpacePColon,"0" );
+            }
+            else
+            {
+                Com::printPolybox( com->M );
+                Com::printFLN( Com::tSpacePColon,"1" );
+            }
+
         }
-//          Com::printFLN( Com::tNewline );
-    break;
     }
+    break;
     case 721: // polybox
         {
             if(com->hasS() && com->hasP())

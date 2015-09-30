@@ -188,6 +188,20 @@ int eps_read_vpin_value( int pin )
     }
 
 }
+//GET VALUE (from tab, and not from actual pin READ value, wich is physicial)
+int eps_get_vpin_value( int pin )
+{
+    if ( pin >= (PINS_PER_BOARD*NUM_BOARD) ) // error
+        return -1;
+
+    else if ( pin < PINS_PER_BOARD ) // Master board
+    {
+        if ( (READ_VPIN_MODE(pin) & PIN_TYPE_IO_MASK ) == PIN_TYPE_INPUT  ) // is input type, so we update the value before senting it.
+            boards[0].write_bpin( pin, HAL::digitalRead(pin) ) ;
+        return boards[0].read_bpin( pin );
+    }
+    return boards[vpin2board(pin)].read_bpin( vpin2bpin(pin) );
+}
  uint8_t eps_read_vpin_type( int pin )
 {
     return boards[vpin2board(pin)].read_bpin_type( vpin2bpin(pin) );
