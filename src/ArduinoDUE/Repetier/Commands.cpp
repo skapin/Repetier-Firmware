@@ -2681,7 +2681,7 @@ void Commands::processMCode(GCode *com)
         {
             if ( com->S == OUTPUT )
             {
-                VPIN_MODE(com->P, OUTPUT);
+                VPIN_MODE(com->P, 3);
                 Com::printPolybox( com->M );
                 Com::printFLN( "Set Pin to Output type" );
             }
@@ -2699,15 +2699,20 @@ void Commands::processMCode(GCode *com)
         if ( com->hasP()  )
         {
             int type = eps_read_vpin_type(com->P);
-            if ( type == OUTPUT )
+            if ( (type & PIN_TYPE_IO_MASK )== PIN_TYPE_OUTPUT )
             {
                 Com::printPolybox( com->M );
                 Com::printFLN( Com::tSpacePColon,"0" );
             }
-            else
+            else if ( (type & PIN_TYPE_IO_MASK )== PIN_TYPE_INPUT )
             {
                 Com::printPolybox( com->M );
                 Com::printFLN( Com::tSpacePColon,"1" );
+            }
+            else
+            {
+                Com::printPolybox( com->M );
+                Com::printFLN( Com::tSpacePColon," UNDEF" );
             }
 
         }
