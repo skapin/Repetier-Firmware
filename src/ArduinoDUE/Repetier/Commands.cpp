@@ -2141,7 +2141,7 @@ void Commands::processMCode(GCode *com)
     case 640: // get labview on off
     {
         Com::printPolybox( com->M );
-        Com::printFLN(Com::tSpace, READ_VPIN( INTER_LVM ));
+        Com::printFLN(Com::tSpace, READ_VPIN( INTER_LVM )/*lvm_is_on()*/ );
     }
     break;
     case 641: // set labview on/off

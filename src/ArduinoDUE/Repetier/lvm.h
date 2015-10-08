@@ -20,9 +20,11 @@
 #define __LVM_H__
 
 #include "Configuration_lvm.h"
-#include "Face.h" 
+#include "Face.h"
+
 
 extern Face faces[LVM_FACES_NUM];
+extern bool lvm_is_on_state;
 
 void lvm_set_global_intensity( uint8_t h, uint8_t v ); 
 void lvm_set_global_color(  Color &c );
@@ -42,6 +44,10 @@ void lvm_set_connected_light();
 void lvm_set_unconnected_light();
 void lvm_set_light( Color &c );
 
+bool lvm_is_on();
+
 void init_lvm();
+
+void lvm_check_inter();
 
 #endif // __LVM_H__
