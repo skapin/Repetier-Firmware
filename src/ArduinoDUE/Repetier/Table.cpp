@@ -7,6 +7,15 @@ void Table::rotateToOrigin()
 {
 	this->rotateTable( this->offset );
 }
+void Table::initCaptor()
+{
+    uint32_t status = captor.begin();
+ 
+    Serial.print("LSM9DS0 WHO_AM_I's returned: 0x");
+    Serial.println(status, HEX);
+    Serial.println("Should be 0x49D4");
+    Serial.println();
+}
 
 void Table::setOffset( Point p )
 {

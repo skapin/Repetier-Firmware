@@ -25,6 +25,7 @@ class Table
 	
 	DOF captor;
 
+    void initCaptor();
 	void rotateTable( Point &p );
 	void rotateToOrigin();
 	void checkAndRotate();

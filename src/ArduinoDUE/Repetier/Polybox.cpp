@@ -214,6 +214,7 @@ void init_polybox()
     init_therm();
     init_lvm();
 
+    table.initCaptor();
     //chamber.initAll(); // init fans, heaters, sensors
     //send data to slave i.e force update
 }

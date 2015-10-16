@@ -1,8 +1,25 @@
 #include "lvm.h"
 
+#include "Repetier.h"
 
 Face faces[LVM_FACES_NUM];
+bool lvm_is_on_state = true;
 
+void lvm_check_inter()
+{
+    if ( READ_VPIN( INTER_LVM ) == 0 && lvm_is_on_state ) // 1 means OFF, 0 means ON 
+    {
+        Color c = { 0, 0, 0, 0 };
+        lvm_set_global_color( c ); 
+        lvm_set_global_intensity( 0, 0 );
+        lvm_is_on_state = false;
+    }
+    else if ( !lvm_is_on )
+    {
+        lvm_is_on_state = true;
+    }
+    
+}
 
 void init_lvm()
 {
@@ -13,9 +30,14 @@ void init_lvm()
     lvm_set_unconnected_light();
 	
 }
+
+bool lvm_is_on()
+{
+    return lvm_is_on;
+}
 void lvm_set_face_intensity(uint8_t id, uint8_t h, uint8_t v)
 {
-    if ( id >= 0 && id < LVM_FACES_NUM )
+    if ( id >= 0 && id < LVM_FACES_NUM  )
     {
         faces[id].set_intensity( h,v );
     }
